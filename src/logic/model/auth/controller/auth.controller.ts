@@ -33,7 +33,7 @@ export class AuthController implements IAuthController {
     try {
       const authRequest = req.body as AuthRegisterRequest;
       const auth = await this.authService.register(authRequest);
-      res.status(200).json(auth);
+      res.status(201).json(auth);
     } catch (err) {
       next(err);
     }
@@ -54,6 +54,12 @@ export class AuthController implements IAuthController {
   }
 
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
-    throw new Error('Method not implemented.');
+    try {
+      const { refreshToken } = req.body as AuthRefreshRequest;
+      await this.authService.logout(refreshToken);
+      res.status(204).send();
+    } catch (err) {
+      next(err);
+    }
   }
 }

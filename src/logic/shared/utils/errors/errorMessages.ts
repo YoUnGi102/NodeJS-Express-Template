@@ -14,6 +14,12 @@ export const STATUS = {
   INTERNAL_SERVER_ERROR: 500,
 };
 
+export interface Message {
+  title: string;
+  message: string;
+  status: number;
+}
+
 export const MESSAGES = {
   // AUTH
   AUTH_USER_NOT_FOUND: {
@@ -55,6 +61,16 @@ export const MESSAGES = {
     title: 'AUTH_REGISTRATION_FAILED',
     message: 'User could not be registered',
     status: STATUS.INTERNAL_SERVER_ERROR,
+  },
+  AUTH_USERNAME_EXISTS: {
+    title: 'AUTH_USERNAME_EXISTS',
+    message: 'User with this username already exists',
+    status: STATUS.CONFLICT,
+  },
+  AUTH_EMAIL_EXISTS: {
+    title: 'AUTH_EMAIL_EXISTS',
+    message: 'User with this email already exists',
+    status: STATUS.CONFLICT,
   },
 
   // USER

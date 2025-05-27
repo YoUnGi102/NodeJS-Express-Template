@@ -6,7 +6,7 @@ export const toAuthDTO = (user: User): AuthDTO => ({
   username: user.username,
   email: user.email,
   password: user.password,
-  refreshToken: user.refreshToken,
+  refreshToken: user.refreshToken ?? null,
   uuid: user.uuid,
   createdAt: user.createdAt,
 });

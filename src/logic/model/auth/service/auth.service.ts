@@ -13,6 +13,7 @@ import { IAuthService } from './auth.service.interface';
 import { JWTPayload } from '@src/logic/shared/types/auth.types';
 import { toAuthResponse } from '../utils/helpers';
 import logger from '@src/logic/shared/utils/logger';
+import { decode } from 'node:punycode';
 
 @injectable()
 export class AuthService implements IAuthService {
@@ -20,7 +21,7 @@ export class AuthService implements IAuthService {
 
   async login({ username, password }: AuthLoginRequest): Promise<AuthResponse> {
     const auth = await this.authRepo.getUserWithPassword(username);
-    if(!auth){
+    if (!auth) {
       throw ERRORS.AUTH.CREDENTIALS_INVALID();
     }
 
@@ -41,6 +42,19 @@ export class AuthService implements IAuthService {
   }
 
   async register(request: AuthRegisterRequest): Promise<AuthResponse> {
+    const userExists = await this.authRepo.checkUserExists(
+      request.username,
+      request.email,
+    );
+    if (userExists && userExists.username === request.username) {
+      throw ERRORS.AUTH.USERNAME_EXISTS();
+    } else if (userExists && userExists.email === request.email) {
+      throw ERRORS.AUTH.EMAIL_EXISTS();
+    }
+
+    const hashedPassword = await bcrypt.hash(request.password, 10);
+    request.password = hashedPassword;
+
     const user = await this.authRepo.registerUser(request);
     if (!user) {
       throw ERRORS.AUTH.REGISTRATION_FAILED();
@@ -71,21 +85,17 @@ export class AuthService implements IAuthService {
       throw err;
     }
 
-    logger.debug(JSON.stringify(jwtPayload))
-
     const user = await this.authRepo.getUserByUUID(jwtPayload.uuid);
     if (!user) {
       throw ERRORS.AUTH.USER_NOT_FOUND();
     }
 
-    logger.warn(JSON.stringify({refreshToken, user:user.refreshToken}));
+    logger.warn(JSON.stringify({ refreshToken, user: user.refreshToken }));
 
     const isValid = await bcrypt.compare(refreshToken, user.refreshToken!);
     if (!isValid) {
       throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
     }
-
-    logger.debug(JSON.stringify(user))
 
     const newRefreshToken = await this.generateRefreshToken(user.uuid);
     const token = this.generateAccessToken(
@@ -114,11 +124,11 @@ export class AuthService implements IAuthService {
           'Expired refresh token used for logout, using decoded payload',
         );
       } else {
-        ERRORS.AUTH.REFRESH_TOKEN_INVALID();
+        throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
       }
     }
 
-    await this.authRepo.updateRefreshToken(refreshToken, null);
+    await this.authRepo.updateRefreshToken(jwtPayload.uuid, null);
   }
 
   // Generate new Access Token

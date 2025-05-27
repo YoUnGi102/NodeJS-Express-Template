@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@config/*": ["src/config/*"],
+      "@logic/*": ["src/logic/*"],
+      "@model/*": ["src/logic/model/*"],
+      "@utils/*": ["src/logic/shared/utils/*"],
+      "@database/*": ["src/database/*"],
+      "@shared/*": ["src/logic/shared/*"]
+    }
+  },
+  "include": ["src", "test"]
+}

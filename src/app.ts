@@ -33,7 +33,7 @@ const registerRoutes = async (): Promise<Router> => {
   router.use('/auth', auth);
 
   return router;
-}
+};
 
 export const createApp = async (dataSource: DataSource): Promise<Express> => {
   const app = express();
@@ -44,9 +44,15 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
   app.locals.dataSource = dataSource;
 
   app.use('/api/', await registerRoutes());
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {swaggerOptions: {
-      withCredentials: true,
-    }}));
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+      swaggerOptions: {
+        withCredentials: true,
+      },
+    }),
+  );
   app.use(errorMiddleware);
 
   return app;

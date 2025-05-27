@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import Joi from 'joi';
 import { RequestPart, SchemaMap } from '../types/validation.types';
+import logger from '../utils/logger';
 
 const validate = (schemas: SchemaMap) => {
   return (req: Request, res: Response, next: NextFunction): void => {
@@ -21,6 +21,7 @@ const validate = (schemas: SchemaMap) => {
           title: 'BAD_REQUEST',
           message: error.details.map((d) => d.message),
         });
+        return;
       }
 
       result[part] = value;

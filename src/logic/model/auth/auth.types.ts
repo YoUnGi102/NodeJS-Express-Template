@@ -14,7 +14,7 @@ export interface AuthDTO {
   email: string;
   password?: string;
   uuid: string;
-  refreshToken?: string;
+  refreshToken?: string | null;
   createdAt: Date;
 }
 

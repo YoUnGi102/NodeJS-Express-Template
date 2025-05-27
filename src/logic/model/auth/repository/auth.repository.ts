@@ -14,6 +14,17 @@ export class AuthRepository implements IAuthRepository {
     this.userRepo = dataSource.getRepository(User);
   }
 
+  // Checks if a user with passed username or email already exists
+  async checkUserExists(
+    username: string,
+    email: string,
+  ): Promise<AuthDTO | null> {
+    const user = await this.userRepo.findOne({
+      where: [{ username }, { email }],
+    });
+    return user ? toAuthDTO(user) : null;
+  }
+
   async getUserWithPassword(username: string): Promise<AuthDTO | null> {
     const user = await this.userRepo.findOne({
       where: { username, active: true, deletedAt: IsNull() },
@@ -28,9 +39,9 @@ export class AuthRepository implements IAuthRepository {
   async getUserByUUID(uuid: string): Promise<AuthDTO | null> {
     const user = await this.userRepo.findOne({
       where: { uuid },
-      select: { 
+      select: {
         uuid: true,
-        refreshToken: true 
+        refreshToken: true,
       },
     });
 
@@ -51,8 +62,6 @@ export class AuthRepository implements IAuthRepository {
     userUUID: string,
     refreshToken: string | null,
   ): Promise<void> {
-    logger.debug(userUUID);
-    logger.debug(refreshToken);
     await this.userRepo.update({ uuid: userUUID }, { refreshToken });
   }
 }
