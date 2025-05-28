@@ -29,5 +29,5 @@ export const INJECTION_TOKENS = {
   IAuthRepository: 'IAuthRepository',
 
   ISessionService: 'ISessionService',
-  ISessionRepository: 'ISessionRepository'
+  ISessionRepository: 'ISessionRepository',
 };

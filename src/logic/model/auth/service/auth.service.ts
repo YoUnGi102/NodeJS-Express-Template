@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { TypeormAuthRepository } from '../repository/auth.repository';
 import {
   AuthLoginRequest,
   AuthResponse,
@@ -12,11 +11,14 @@ import { JWTPayload } from '@src/logic/shared/types/auth.types';
 import { toAuthResponse } from '../utils/helpers';
 import logger from '@src/logic/shared/utils/logger';
 import authTokenUtils, { hashUtils } from '../utils/authUtils';
-import authUtils from '../utils/authUtils';
+import { INJECTION_TOKENS } from '@src/config';
+import { IAuthRepository } from '../repository/auth.repository.interface';
 
 @injectable()
 export class AuthService implements IAuthService {
-  constructor(@inject(TypeormAuthRepository) private authRepo: TypeormAuthRepository) {}
+  constructor(
+    @inject(INJECTION_TOKENS.IAuthRepository) private authRepo: IAuthRepository,
+  ) {}
 
   async login({ username, password }: AuthLoginRequest): Promise<AuthResponse> {
     const auth = await this.authRepo.getUserWithPassword(username);
@@ -121,7 +123,7 @@ export class AuthService implements IAuthService {
       if (decoded && decoded.uuid) {
         jwtPayload = decoded;
         logger.warn(
-          'Expired refresh token used for logout, using decoded payload',
+          `Expired refresh token used for logout, using decoded payload ${err}`,
         );
       } else {
         throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();

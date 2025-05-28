@@ -247,7 +247,7 @@ describe('POST /auth/refresh', () => {
 
   it('should return new refresh and access token', async () => {
     // Arrange
-    const { user, refreshToken, token } = (await createTestUser(app))[0];
+    const { refreshToken, token } = (await createTestUser(app))[0];
 
     // Act
     const res = await request(app)

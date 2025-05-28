@@ -6,7 +6,10 @@ import { DataSource } from 'typeorm';
 import { container } from 'tsyringe';
 import { createTestDataSource } from '../global-setup';
 
-export const setupIntegration = async (): Promise<any> => {
+export const setupIntegration = async (): Promise<{
+  app: Express;
+  testDataSource: DataSource;
+}> => {
   const testDataSource = createTestDataSource();
   await testDataSource.initialize();
   container.registerInstance(DataSource, testDataSource);

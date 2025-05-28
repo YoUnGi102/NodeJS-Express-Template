@@ -16,5 +16,9 @@ container.register(INJECTION_TOKENS.IAuthRepository, {
 });
 
 // Session
-container.register(INJECTION_TOKENS.ISessionService, {useClass: SessionService})
-container.register(INJECTION_TOKENS.ISessionRepository, {useClass: TypeormSessionRepository})
+container.register(INJECTION_TOKENS.ISessionService, {
+  useClass: SessionService,
+});
+container.register(INJECTION_TOKENS.ISessionRepository, {
+  useClass: TypeormSessionRepository,
+});

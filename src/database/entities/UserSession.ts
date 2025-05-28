@@ -4,17 +4,16 @@ import { User } from './User';
 
 @Entity()
 export class UserSession extends AuditableEntity {
-
-  @ManyToOne(() => User, (user) => user.sessions, {onDelete: 'CASCADE'})
+  @ManyToOne(() => User, (user) => user.sessions, { onDelete: 'CASCADE' })
   user: User;
 
-  @Column({type: 'varchar', unique: true})
+  @Column({ type: 'varchar', unique: true })
   refreshToken: string;
 
-  @Column({type: 'varchar', nullable: true})
+  @Column({ type: 'varchar', nullable: true })
   userAgent?: string | null;
 
-  @Column({type: 'varchar', nullable: true})
+  @Column({ type: 'varchar', nullable: true })
   ipAddress?: string | null;
 
   constructor(

@@ -1,7 +1,8 @@
 import { DataSource } from 'typeorm';
 import { User, UserSession } from '../src/database/entities';
+import logger from '../src/logic/shared/utils/logger';
 
-console.log('NODE_ENV', process.env.NODE_ENV);
+logger.info('NODE_ENV', process.env.NODE_ENV);
 
 export const createTestDataSource = () =>
   new DataSource({

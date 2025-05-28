@@ -6,7 +6,7 @@ export const errorMiddleware = (
   err: APIError,
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
   const isAPIError = err instanceof APIError;
   const HIDE_API_ERRORS =
