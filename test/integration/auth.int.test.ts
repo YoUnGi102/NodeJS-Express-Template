@@ -16,9 +16,9 @@ let app: Express;
 let userRepo: Repository<User>;
 
 beforeAll(async () => {
-  const setup = await setupIntegration();
-  app = setup.app;
-  userRepo = setup.testDataSource.getRepository(User);
+  const config = await setupIntegration();
+  app = config.app;
+  userRepo = config.testDataSource.getRepository(User);
 });
 
 afterAll(async () => {});

@@ -1,7 +1,5 @@
 import { DataSource } from 'typeorm';
-import { container } from 'tsyringe';
-import { User } from '../src/database/entities';
-import logger from '../src/logic/shared/utils/logger';
+import { User, UserSession } from '../src/database/entities';
 
 console.log('NODE_ENV', process.env.NODE_ENV);
 
@@ -11,7 +9,7 @@ export const createTestDataSource = () =>
     database: ':memory:',
     dropSchema: true,
     synchronize: true,
-    entities: [User],
+    entities: [User, UserSession],
     logging: false,
   });
 

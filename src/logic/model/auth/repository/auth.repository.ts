@@ -6,7 +6,7 @@ import { inject, injectable } from 'tsyringe';
 import { IAuthRepository } from './auth.repository.interface';
 
 @injectable()
-export class AuthRepository implements IAuthRepository {
+export class TypeormAuthRepository implements IAuthRepository {
   private userRepo;
 
   constructor(@inject(DataSource) private dataSource: DataSource) {

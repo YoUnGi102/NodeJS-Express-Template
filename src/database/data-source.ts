@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
-import { User } from '@database/entities';
+import { User, UserSession } from '@database/entities';
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false, // never true in production !!!
   logging: process.env.NODE_ENV !== 'production',
-  entities: [User],
+  entities: [User, UserSession],
   migrations: [
     process.env.NODE_ENV === 'production'
       ? 'dist/database/migrations/**/*.js'

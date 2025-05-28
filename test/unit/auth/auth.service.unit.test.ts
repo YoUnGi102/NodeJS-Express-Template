@@ -1,16 +1,19 @@
-import { AuthRepository } from '@src/logic/model/auth/repository/auth.repository';
+import {Express} from 'express';
+import { TypeormAuthRepository } from '@src/logic/model/auth/repository/auth.repository';
 import { AuthService } from '@src/logic/model/auth/service/auth.service';
 import authTokenUtils from '@src/logic/model/auth/utils/authUtils';
 import { createTestUserRequest } from '../../utils/factories';
 import { ERRORS } from '@src/logic/shared/utils/errors';
-import { setupTestDataSource } from '../setup';
+import { setupUnit } from '../setup';
 
-let authRepository: AuthRepository;
+let authRepository: TypeormAuthRepository;
 let authService: AuthService;
+let app: Express;
 
 beforeAll(async () => {
-  const testDataSource = await setupTestDataSource();
-  authRepository = new AuthRepository(testDataSource);
+  const config = await setupUnit();
+  app = config.app;
+  authRepository = new TypeormAuthRepository(config.testDataSource);
   authService = new AuthService(authRepository);
 });
 

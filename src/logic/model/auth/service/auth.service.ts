@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { AuthRepository } from '../repository/auth.repository';
+import { TypeormAuthRepository } from '../repository/auth.repository';
 import {
   AuthLoginRequest,
   AuthResponse,
@@ -16,7 +16,7 @@ import authUtils from '../utils/authUtils';
 
 @injectable()
 export class AuthService implements IAuthService {
-  constructor(@inject(AuthRepository) private authRepo: AuthRepository) {}
+  constructor(@inject(TypeormAuthRepository) private authRepo: TypeormAuthRepository) {}
 
   async login({ username, password }: AuthLoginRequest): Promise<AuthResponse> {
     const auth = await this.authRepo.getUserWithPassword(username);

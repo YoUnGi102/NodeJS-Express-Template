@@ -4,6 +4,9 @@ import {
   AuthResponse,
 } from '../../src/logic/model/auth/auth.types';
 import request from 'supertest';
+import authUtils from '@src/logic/model/auth/utils/authUtils';
+import { DataSource } from 'typeorm';
+import { User, UserSession } from '@src/database/entities';
 
 export const TEST_PASSWORD = 'Test123.+';
 
@@ -39,3 +42,16 @@ export const createTestUser = async (
 
   return users;
 };
+
+
+export const createTestSessionForUser = async (dataSource: DataSource, userUUID: string) => {
+  const user = await dataSource.getRepository(User).findOneByOrFail({uuid: userUUID});
+  const sessionCreate = dataSource.getRepository(UserSession).create({
+    user,
+    ipAddress: '102.229.30.1',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+    refreshToken: authUtils.signRefreshToken(userUUID)
+  })
+  const session = await dataSource.getRepository(UserSession).save(sessionCreate);
+  return session;
+}

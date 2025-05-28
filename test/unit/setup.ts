@@ -1,7 +1,15 @@
+import 'reflect-metadata';
+import '@config/container';
+import { DataSource } from 'typeorm';
 import { createTestDataSource } from '../global-setup';
+import { container } from 'tsyringe';
+import { createApp } from '@src/app';
 
-export const setupTestDataSource = async () => {
+export const setupUnit = async (): Promise<any> => {
   const testDataSource = createTestDataSource();
   await testDataSource.initialize();
-  return testDataSource;
+  container.registerInstance(DataSource, testDataSource);
+  const app = await createApp(container.resolve(DataSource));
+  return { app, testDataSource };
 };
+
