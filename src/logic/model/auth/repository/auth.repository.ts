@@ -4,7 +4,6 @@ import { User } from '@src/database/entities';
 import { toAuthDTO } from './auth.mapper';
 import { inject, injectable } from 'tsyringe';
 import { IAuthRepository } from './auth.repository.interface';
-import logger from '@src/logic/shared/utils/logger';
 
 @injectable()
 export class AuthRepository implements IAuthRepository {
@@ -29,8 +28,12 @@ export class AuthRepository implements IAuthRepository {
     const user = await this.userRepo.findOne({
       where: { username, active: true, deletedAt: IsNull() },
       select: {
-        password: true,
+        username: true,
         refreshToken: true,
+        email: true,
+        password: true,
+        uuid: true,
+        createdAt: true,
       },
     });
     return user ? toAuthDTO(user) : null;
@@ -42,6 +45,9 @@ export class AuthRepository implements IAuthRepository {
       select: {
         uuid: true,
         refreshToken: true,
+        username: true,
+        email: true,
+        createdAt: true,        
       },
     });
 

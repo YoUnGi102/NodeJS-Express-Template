@@ -30,7 +30,7 @@ export const MESSAGES = {
   AUTH_CREDENTIALS_INVALID: {
     title: 'AUTH_CREDENTIALS_INVALID',
     message: 'Invalid username or password',
-    status: STATUS.BAD_REQUEST,
+    status: STATUS.UNAUTHORIZED,
   },
   AUTH_TOKEN_NOT_PROVIDED: {
     title: 'AUTH_TOKEN_NOT_PROVIDED',

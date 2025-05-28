@@ -1,6 +1,11 @@
 import { Express } from 'express';
-import { AuthRegisterRequest } from '../../src/logic/model/auth/auth.types';
+import {
+  AuthRegisterRequest,
+  AuthResponse,
+} from '../../src/logic/model/auth/auth.types';
 import request from 'supertest';
+
+export const TEST_PASSWORD = 'Test123.+';
 
 export const createTestUserRequest = (
   userOverrides: Partial<AuthRegisterRequest> = {},
@@ -8,7 +13,7 @@ export const createTestUserRequest = (
   const user: AuthRegisterRequest = {
     username: 'TestUser_' + Math.random().toString(36).substring(2, 8),
     email: 'test_' + Date.now() + '@example.com',
-    password: 'Test123.+',
+    password: TEST_PASSWORD,
     ...userOverrides,
   };
   return user;
@@ -18,7 +23,7 @@ export const createTestUser = async (
   app: Express,
   userOverrides: Partial<AuthRegisterRequest> = {},
   count: number = 1,
-) => {
+): Promise<AuthResponse[]> => {
   const users = [];
   for (let i = 0; i < count; i++) {
     const user = createTestUserRequest(userOverrides);
@@ -29,7 +34,7 @@ export const createTestUser = async (
         `Failed to create user: ${res.status} ${JSON.stringify(res.body)}`,
       );
     }
-    users.push({ user, res: res.body });
+    users.push(res.body);
   }
 
   return users;

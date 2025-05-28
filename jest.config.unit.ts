@@ -3,12 +3,14 @@ import { compilerOptions } from './tsconfig.json';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
 const config: Config = {
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   rootDir: './',
-  testMatch: ['**/test/**/*.int.test.ts'],
+  testMatch: ['**/test/unit/**/*.unit.test.ts'],
   setupFiles: ['<rootDir>/test/setup-env.ts'],
-  setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/test/unit/setup.ts'],
+  globalSetup: './test/global-setup.ts',
+  globalTeardown: './test/global-teardown.ts',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>/',
   }),
