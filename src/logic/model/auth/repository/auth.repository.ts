@@ -47,7 +47,7 @@ export class AuthRepository implements IAuthRepository {
         refreshToken: true,
         username: true,
         email: true,
-        createdAt: true,        
+        createdAt: true,
       },
     });
 

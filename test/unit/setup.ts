@@ -1,7 +1,7 @@
-import { createTestDataSource } from "../global-setup"
+import { createTestDataSource } from '../global-setup';
 
 export const setupTestDataSource = async () => {
   const testDataSource = createTestDataSource();
-  await testDataSource.initialize()
-  return testDataSource
-}
+  await testDataSource.initialize();
+  return testDataSource;
+};

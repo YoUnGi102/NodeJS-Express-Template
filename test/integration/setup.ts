@@ -8,8 +8,8 @@ import { createTestDataSource } from '../global-setup';
 
 export const setupIntegration = async (): Promise<any> => {
   const testDataSource = createTestDataSource();
-  await testDataSource.initialize()
+  await testDataSource.initialize();
   container.registerInstance(DataSource, testDataSource);
   const app = await createApp(container.resolve(DataSource));
-  return {app, testDataSource};
+  return { app, testDataSource };
 };

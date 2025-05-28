@@ -21,8 +21,7 @@ beforeAll(async () => {
   userRepo = setup.testDataSource.getRepository(User);
 });
 
-afterAll(async () => {
-});
+afterAll(async () => {});
 
 const BASE_URL = '/api/auth';
 describe('POST /auth/register', () => {
@@ -234,49 +233,90 @@ describe('POST auth/login', () => {
   it('should store hashed refresh token in databse', async () => {
     const { user, refreshToken } = (await createTestUser(app))[0];
 
-    const userFromDB = await userRepo.findOne({where: { uuid: user.uuid }, select: {refreshToken: true}});
+    const userFromDB = await userRepo.findOne({
+      where: { uuid: user.uuid },
+      select: { refreshToken: true },
+    });
 
     expect(refreshToken).not.toEqual(userFromDB!.refreshToken);
   });
 });
 
 describe('POST /auth/refresh', () => {
-  const POST_AUTH_REFRESH = `${BASE_URL}/refresh`
+  const POST_AUTH_REFRESH = `${BASE_URL}/refresh`;
 
   it('should return new refresh and access token', async () => {
     // Arrange
-    const {user, refreshToken, token} = (await createTestUser(app))[0]
+    const { user, refreshToken, token } = (await createTestUser(app))[0];
 
     // Act
     const res = await request(app)
       .post(POST_AUTH_REFRESH)
-      .send({refreshToken})
+      .send({ refreshToken });
 
     // Assert
     expect(res.body.token).toBeDefined();
     expect(res.body.refreshToken).toBeDefined();
     expect(res.body.token).not.toEqual(token);
     expect(res.body.refreshToken).not.toEqual(refreshToken);
-  })
+  });
 
   it('should return 401 if invalid refresh token is passed', async () => {
     // Arrange
-    const {user, refreshToken, token} = (await createTestUser(app))[0]
+    const { refreshToken } = (await createTestUser(app))[0];
 
-    await request(app)
-      .post(POST_AUTH_REFRESH)
-      .send({refreshToken})
+    await request(app).post(POST_AUTH_REFRESH).send({ refreshToken });
 
     // Act
     const res = await request(app)
       .post(POST_AUTH_REFRESH)
-      .send({refreshToken})
+      .send({ refreshToken });
 
     // Assert
-    const {status, message, title} = MESSAGES.AUTH_REFRESH_TOKEN_INVALID;
+    const { status, message, title } = MESSAGES.AUTH_REFRESH_TOKEN_INVALID;
     expect(res.status).toBe(status);
-    expect(res.body).toEqual(expect.objectContaining({
-      message, title
-    }))
-  })
-})
+    expect(res.body).toEqual(
+      expect.objectContaining({
+        message,
+        title,
+      }),
+    );
+  });
+});
+
+describe('POST /auth/logout', () => {
+  const POST_AUTH_LOGOUT = `${BASE_URL}/logout`;
+
+  it('should delete refreshToken from database when user logs out', async () => {
+    // Arrange
+    const { user, refreshToken } = (await createTestUser(app))[0];
+
+    // Act
+    const res = await request(app)
+      .post(POST_AUTH_LOGOUT)
+      .send({ refreshToken });
+
+    const updatedUser = await userRepo.findOne({
+      where: { uuid: user.uuid },
+      select: { uuid: true, refreshToken: true },
+    });
+
+    // Assert
+    expect(res.status).toBe(204);
+    expect(updatedUser).toBeDefined();
+    expect(updatedUser!.refreshToken).toBeNull();
+  });
+
+  it('should return 401 if refresh token is invalid', async () => {
+    // Act
+    const res = await request(app)
+      .post(POST_AUTH_LOGOUT)
+      .send({ refreshToken: 'Invalid refresh token' });
+    const { message, title, status } = MESSAGES.AUTH_REFRESH_TOKEN_INVALID;
+
+    // Assert
+    expect(res.status).toBe(status);
+    expect(res.body.message).toBe(message);
+    expect(res.body.title).toBe(title);
+  });
+});
