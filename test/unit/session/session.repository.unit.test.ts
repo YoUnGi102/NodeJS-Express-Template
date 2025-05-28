@@ -4,6 +4,7 @@ import { TypeormSessionRepository } from '@src/logic/model/session/repository/se
 import { createTestSessionForUser, createTestUser } from '../../utils/factories';
 import { setupUnit } from '../setup';
 import { DataSource } from 'typeorm';
+import { UserSession } from '@src/database/entities';
 
 let sessionRepo: ISessionRepository;
 let app: Express;
@@ -64,5 +65,22 @@ describe('ISessionRepository - revokeSession', () => {
 
         // Assert
         expect(foundSession).toBeNull();
+    })
+})
+
+describe('ISessionRepository - revokeAllForUser', () => {
+    it('should soft delete session if valid refreshToken passed', async () => {
+        // Arrange
+        const {user} = (await createTestUser(app))[0];
+        const sessions = await Promise.all(Array.from({length: 5}, async () => createTestSessionForUser(testDataSource, user.uuid)));
+
+        console.log(sessions.length);
+
+        // Act
+        await sessionRepo.revokeAllForUser(user.uuid);
+        const foundSession = await testDataSource.getRepository(UserSession).findBy({user: { uuid: user.uuid }});
+
+        // Assert
+        expect(foundSession.length).toEqual(0);
     })
 })

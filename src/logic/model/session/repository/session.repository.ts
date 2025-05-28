@@ -37,7 +37,10 @@ export class TypeormSessionRepository implements ISessionRepository{
     }
 
     async revokeAllForUser(userUUID: string): Promise<void> {
-        throw new Error("Method not implemented.");
+        const sessions = await this.sessionRepo.findBy({user: {uuid: userUUID}});
+        for (const session of sessions) {
+            await this.sessionRepo.softDelete({ id: session.id });
+        }
     }
 
 }
