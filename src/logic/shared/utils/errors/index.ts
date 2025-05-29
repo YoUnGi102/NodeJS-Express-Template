@@ -27,4 +27,7 @@ export const ERRORS = {
     PASSWORD_MISSING: () => throwError(MESSAGES.USER_PASSWORD_MISSING),
     USERNAME_MISSING: () => throwError(MESSAGES.USER_USERNAME_MISSING),
   },
+  SESSION: {
+    NOT_FOUND: () => throwError(MESSAGES.SESSION_NOT_FOUND),
+  },
 };

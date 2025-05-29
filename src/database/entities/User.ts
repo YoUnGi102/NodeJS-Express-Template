@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { AuditableEntityUUID } from './AuditableEntityUUID';
+import { UserSession } from './UserSession';
 
 @Entity()
 export class User extends AuditableEntityUUID {
@@ -18,8 +19,8 @@ export class User extends AuditableEntityUUID {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
-  @Column({ type: 'varchar', nullable: true, unique: true, select: false })
-  refreshToken?: string | null;
+  @OneToMany(() => UserSession, (session) => session.user)
+  sessions?: UserSession[];
 
   constructor(
     username: string,

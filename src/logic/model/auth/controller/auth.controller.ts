@@ -7,6 +7,7 @@ import {
   AuthLoginRequest,
   AuthRefreshRequest,
   AuthRegisterRequest,
+  AuthSessionInfo,
 } from '../auth.types';
 
 @injectable()
@@ -18,7 +19,11 @@ export class AuthController implements IAuthController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const authRequest = req.body as AuthLoginRequest;
-      const auth = await this.authService.login(authRequest);
+      const sessionInfo: AuthSessionInfo = {
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent')
+      }
+      const auth = await this.authService.login(authRequest, sessionInfo);
       res.status(200).json(auth);
     } catch (err) {
       next(err);
@@ -32,7 +37,11 @@ export class AuthController implements IAuthController {
   ): Promise<void> {
     try {
       const authRequest = req.body as AuthRegisterRequest;
-      const auth = await this.authService.register(authRequest);
+      const sessionInfo: AuthSessionInfo = {
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent')
+      }
+      const auth = await this.authService.register(authRequest, sessionInfo);
       res.status(201).json(auth);
     } catch (err) {
       next(err);

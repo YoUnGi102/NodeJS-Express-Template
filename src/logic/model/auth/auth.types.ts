@@ -14,7 +14,6 @@ export interface AuthDTO {
   email: string;
   password?: string;
   uuid: string;
-  refreshToken?: string | null;
   createdAt: Date;
 }
 
@@ -42,3 +41,8 @@ export type AuthRegisterRequest = Joi.extractType<
 export type AuthRefreshRequest = Joi.extractType<
   ReturnType<typeof authPostRefresh>
 >;
+
+export interface AuthSessionInfo {
+  ipAddress?: string;
+  userAgent?: string;
+}

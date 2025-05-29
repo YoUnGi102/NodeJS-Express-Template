@@ -99,4 +99,12 @@ export const MESSAGES = {
     message: 'User password is missing',
     status: STATUS.BAD_REQUEST,
   },
+
+  // SESSION
+
+  SESSION_NOT_FOUND: {
+    title: 'SESSION_NOT_FOUND',
+    message: 'No session found',
+    status: STATUS.NOT_FOUND,
+  },
 };
