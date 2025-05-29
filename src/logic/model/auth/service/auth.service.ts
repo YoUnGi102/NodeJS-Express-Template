@@ -10,14 +10,18 @@ import { IAuthService } from './auth.service.interface';
 import { JWTPayload } from '@src/logic/shared/types/auth.types';
 import { toAuthResponse } from '../utils/helpers';
 import logger from '@src/logic/shared/utils/logger';
-import authTokenUtils, { hashUtils } from '../utils/authUtils';
+import authTokenUtils from '../utils/authUtils';
+import hashUtils from '@src/logic/shared/utils/hashUtils';
 import { INJECTION_TOKENS } from '@src/config';
 import { IAuthRepository } from '../repository/auth.repository.interface';
+import { ISessionService } from '../../session/service/session.service.interface';
+import { verifyRefreshToken } from '../../session/utils/helper';
 
 @injectable()
 export class AuthService implements IAuthService {
   constructor(
     @inject(INJECTION_TOKENS.IAuthRepository) private authRepo: IAuthRepository,
+    @inject(INJECTION_TOKENS.ISessionService) private sessionService: ISessionService
   ) {}
 
   async login({ username, password }: AuthLoginRequest): Promise<AuthResponse> {
@@ -38,7 +42,8 @@ export class AuthService implements IAuthService {
       auth.email,
     );
 
-    const refreshToken = await this.generateRefreshToken(auth.uuid);
+    // TODO Add IP and User Agent
+    const {refreshToken} = await this.sessionService.createSession(auth.uuid);
 
     return toAuthResponse(token, refreshToken, auth);
   }
@@ -67,25 +72,15 @@ export class AuthService implements IAuthService {
       user.uuid,
       user.email,
     );
-    const refreshToken = await this.generateRefreshToken(user.uuid);
+    
+    // TODO Add IP and User Agent
+    const {refreshToken} = await this.sessionService.createSession(user.uuid);
 
     return toAuthResponse(token, refreshToken, user);
   }
 
-  // TODO Fix - New token is not saved
   async refreshAccessToken(refreshToken: string): Promise<AuthResponse> {
-    let jwtPayload;
-    try {
-      jwtPayload = jwt.verify(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET!,
-      ) as JWTPayload;
-    } catch (err) {
-      if (err instanceof jwt.TokenExpiredError) {
-        throw ERRORS.AUTH.ACCESS_TOKEN_EXPIRED();
-      }
-      throw err;
-    }
+    const jwtPayload = verifyRefreshToken(refreshToken);
 
     const user = await this.authRepo.getUserByUUID(jwtPayload.uuid);
     if (!user) {

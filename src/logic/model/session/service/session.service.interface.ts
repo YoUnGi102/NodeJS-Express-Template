@@ -3,7 +3,6 @@ import { UserSessionDTO } from '../session.types';
 export interface ISessionService {
   createSession(
     userUUID: string,
-    refreshToken: string,
     ipAddress?: string,
     userAgent?: string,
   ): Promise<UserSessionDTO>;

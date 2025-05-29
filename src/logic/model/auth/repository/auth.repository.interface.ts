@@ -1,4 +1,3 @@
-import { UserSession } from '@src/database/entities';
 import { AuthDTO, AuthRegisterRequest } from '../auth.types';
 
 export interface IAuthRepository {

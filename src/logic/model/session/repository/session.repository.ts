@@ -1,11 +1,12 @@
 import { UserSession } from '@src/database/entities/UserSession';
-import { inject } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { DataSource } from 'typeorm';
 import { ISessionRepository } from './session.repository.interface';
 import { UserSessionDTO } from '../session.types';
 import { User } from '@src/database/entities';
 import { toUserSessionDTO } from '../utils/helper';
 
+@injectable()
 export class TypeormSessionRepository implements ISessionRepository {
   private sessionRepo;
   private userRepo;

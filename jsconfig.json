@@ -8,7 +8,8 @@
       "@model/*": ["src/logic/model/*"],
       "@utils/*": ["src/logic/shared/utils/*"],
       "@database/*": ["src/database/*"],
-      "@shared/*": ["src/logic/shared/*"]
+      "@shared/*": ["src/logic/shared/*"],
+      "@test/*": ["test/*"]
     }
   },
   "include": ["src", "test"]
