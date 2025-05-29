@@ -255,8 +255,6 @@ To make it open-source, consider adding a license such as [MIT](https://chooseal
 
 ## 🧩 TODO / Roadmap
 
-- [ ] Improve Swagger schemas
-- [ ] Add CI workflow (GitHub Actions)
 - [ ] Add Docker Compose (Postgres + App)
 - [ ] Add rate-limiting & security middleware
 - [ ] Add role-based access control
