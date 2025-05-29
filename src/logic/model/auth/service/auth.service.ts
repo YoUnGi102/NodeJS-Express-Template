@@ -2,6 +2,7 @@ import {
   AuthLoginRequest,
   AuthResponse,
   AuthRegisterRequest,
+  AuthSessionInfo,
 } from '../auth.types';
 import { ERRORS } from '@src/logic/shared/utils/errors';
 import { inject, injectable } from 'tsyringe';
@@ -21,7 +22,7 @@ export class AuthService implements IAuthService {
     private sessionService: ISessionService,
   ) {}
 
-  async login({ username, password }: AuthLoginRequest): Promise<AuthResponse> {
+  async login({ username, password }: AuthLoginRequest, {ipAddress, userAgent}: AuthSessionInfo): Promise<AuthResponse> {
     const auth = await this.authRepo.getUserWithPassword(username);
     if (!auth) {
       throw ERRORS.AUTH.CREDENTIALS_INVALID();
@@ -39,13 +40,12 @@ export class AuthService implements IAuthService {
       auth.email,
     );
 
-    // TODO Add IP and User Agent
-    const { refreshToken } = await this.sessionService.createSession(auth.uuid);
+    const { refreshToken } = await this.sessionService.createSession(auth.uuid, ipAddress, userAgent);
 
     return toAuthResponse(token, refreshToken, auth);
   }
 
-  async register(request: AuthRegisterRequest): Promise<AuthResponse> {
+  async register(request: AuthRegisterRequest, {ipAddress, userAgent}: AuthSessionInfo): Promise<AuthResponse> {
     const userExists = await this.authRepo.checkUserExists(
       request.username,
       request.email,
@@ -70,8 +70,7 @@ export class AuthService implements IAuthService {
       user.email,
     );
 
-    // TODO Add IP and User Agent
-    const { refreshToken } = await this.sessionService.createSession(user.uuid);
+    const { refreshToken } = await this.sessionService.createSession(user.uuid, ipAddress, userAgent);
 
     return toAuthResponse(token, refreshToken, user);
   }

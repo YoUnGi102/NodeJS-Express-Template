@@ -138,6 +138,17 @@ describe('POST /auth/register', () => {
       expect(res.body.title).toBe('BAD_REQUEST');
     });
   });
+
+  it('should create a session when user registers', async () => {
+    const { user, refreshToken } = (await createTestUser(app))[0];
+
+    const session = await sessionRepo.findOne({
+      where: { refreshToken: hashUtils.sha256(refreshToken) },
+      relations: ['user'],
+    });
+    expect(session).toBeDefined();
+    expect(session!.user.username).toEqual(user.username);
+  });
 });
 
 describe('POST auth/login', () => {
@@ -232,16 +243,29 @@ describe('POST auth/login', () => {
     );
   });
 
-  it('should create a session when user registers', async () => {
-    const { user, refreshToken } = (await createTestUser(app))[0];
+  it('should create a session with correct user-agent and IP address', async () => {
+    const userAgent = 'jest-test-agent';
+    const fakeIP = '123.45.67.89';
+    const {user} = (await createTestUser(app))[0];
 
-    const session = await sessionRepo.findOne({
-      where: { refreshToken: hashUtils.sha256(refreshToken) },
-      relations: ['user'],
-    });
-    expect(session).toBeDefined();
-    expect(session!.user.username).toEqual(user.username);
+    const res = await request(app)
+      .post(POST_AUTH_LOGIN)
+      .set('User-Agent', userAgent)
+      .set('X-Forwarded-For', fakeIP)
+      .send({
+        username: user.username,
+        password: TEST_PASSWORD
+      })
+
+    // fetch the session from DB
+    const hashedToken = hashUtils.sha256(res.body.refreshToken);
+    const session = await sessionRepo.findOneBy({refreshToken: hashedToken});
+
+    expect(session!.userAgent).toBe(userAgent);
+    expect(session!.ipAddress).toBe(fakeIP);
   });
+
+  
 });
 
 describe('POST /auth/refresh', () => {

@@ -6,7 +6,7 @@ const SLOW_REQUEST_THRESHOLD_MS = parseInt(
   10,
 );
 
-const NODE_ENV = process.env.NODE_ENV;
+const HIDE_API_LOGS = process.env.HIDE_API_LOGS;
 
 export const loggingMiddleware = (
   req: Request,
@@ -25,7 +25,7 @@ export const loggingMiddleware = (
       logger.warn(`Slow request: ${msg}`);
     }
 
-    if (NODE_ENV !== 'test') {
+    if (HIDE_API_LOGS !== 'true') {
       if (statusCode >= 500) {
         logger.error(msg);
       } else if (statusCode >= 400) {
