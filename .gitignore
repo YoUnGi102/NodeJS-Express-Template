@@ -2,6 +2,7 @@ node_modules/
 .env
 .env.production
 .env.development
+.env.test
 coverage/
 dist/
 logs/
