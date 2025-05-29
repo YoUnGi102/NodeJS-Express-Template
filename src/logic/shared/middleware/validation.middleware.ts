@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { RequestPart, SchemaMap } from '../types/validation.types';
-import logger from '../utils/logger';
 
 const validate = (schemas: SchemaMap) => {
   return (req: Request, res: Response, next: NextFunction): void => {

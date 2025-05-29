@@ -8,11 +8,11 @@
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
     "build": "tsup",
-    "ci": "npm ci && npm run format && npm run test:unit && npm run lint",
+    "ci": "npm ci && npm run format && npm run test && npm run lint",
     "test:integration": "npx jest --config jest.config.integration.ts",
     "test:unit": "npx jest --config jest.config.unit.ts",
     "test": "npm run test:integration && npm run test:unit",
-    "lint": "eslint ./eslint.config.js",
+    "lint": "eslint src test --ext .ts,.tsx",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typeorm": "node --loader ts-node/esm ./node_modules/typeorm/cli.js",
@@ -31,7 +31,7 @@
     "template"
   ],
   "author": "YoUnGi102 (Tomáš Greš)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/YoUnGi102/NodeJS-Express-Template/issues"
   },

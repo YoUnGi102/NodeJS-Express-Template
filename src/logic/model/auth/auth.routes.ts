@@ -31,8 +31,10 @@ const router = Router();
  *             properties:
  *               username:
  *                 type: string
+ *                 maxLength: 50
  *               password:
  *                 type: string
+ *                 maxLength: 50
  *     responses:
  *       200:
  *         description: Successful login
@@ -45,7 +47,35 @@ const router = Router();
  *                   type: string
  *                 refreshToken:
  *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                       format: email
+ *                     uuid:
+ *                       type: string
+ *                       format: uuid
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *       401:
+ *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   enum:
+ *                     - AUTH_CREDENTIALS_INVALID
+ *                 message:
+ *                   type: string
  */
+
 router.post(
   '/login',
   validate(VALIDATOR.POST_AUTH_LOGIN),
@@ -72,10 +102,17 @@ router.post(
  *             properties:
  *               username:
  *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 50
  *               password:
  *                 type: string
+ *                 minLength: 8
+ *                 maxLength: 50
+ *                 pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$'
+ *                 description: Must include uppercase, lowercase, number, and special character
  *               email:
  *                 type: string
+ *                 format: email
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -87,6 +124,44 @@ router.post(
  *                 token:
  *                   type: string
  *                 refreshToken:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                       format: email
+ *                     uuid:
+ *                       type: string
+ *                       format: uuid
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *       409:
+ *         description: Conflict due to duplicate user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   enum: [AUTH_USERNAME_EXISTS, AUTH_EMAIL_EXISTS]
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Registration failed due to a server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   enum: [AUTH_REGISTRATION_FAILED]
+ *                 message:
  *                   type: string
  */
 
@@ -126,9 +201,36 @@ router.post(
  *                   type: string
  *                 refreshToken:
  *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                       format: email
+ *                     uuid:
+ *                       type: string
+ *                       format: uuid
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
  *       401:
  *         description: Invalid or expired refresh token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   enum:
+ *                     - AUTH_REFRESH_TOKEN_INVALID
+ *                     - AUTH_REFRESH_TOKEN_EXPIRED
+ *                 message:
+ *                   type: string
  */
+
 router.post(
   '/refresh',
   validate(VALIDATOR.POST_AUTH_REFRESH),
@@ -154,10 +256,22 @@ router.post(
  *               refreshToken:
  *                 type: string
  *     responses:
- *       200:
- *         description: Logged out successfully
+ *       204:
+ *         description: Logged out successfully. No content returned.
  *       401:
- *         description: Invalid refresh token
+ *         description: Invalid or expired refresh token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   enum:
+ *                     - AUTH_REFRESH_TOKEN_INVALID
+ *                     - AUTH_REFRESH_TOKEN_EXPIRED
+ *                 message:
+ *                   type: string
  */
 router.post(
   '/logout',

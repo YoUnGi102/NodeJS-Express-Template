@@ -6,7 +6,7 @@ import { inject, injectable } from 'tsyringe';
 import { IAuthRepository } from './auth.repository.interface';
 
 @injectable()
-export class AuthRepository implements IAuthRepository {
+export class TypeormAuthRepository implements IAuthRepository {
   private userRepo;
 
   constructor(@inject(DataSource) private dataSource: DataSource) {
@@ -29,7 +29,6 @@ export class AuthRepository implements IAuthRepository {
       where: { username, active: true, deletedAt: IsNull() },
       select: {
         username: true,
-        refreshToken: true,
         email: true,
         password: true,
         uuid: true,
@@ -44,7 +43,6 @@ export class AuthRepository implements IAuthRepository {
       where: { uuid },
       select: {
         uuid: true,
-        refreshToken: true,
         username: true,
         email: true,
         createdAt: true,
@@ -62,12 +60,5 @@ export class AuthRepository implements IAuthRepository {
     });
     const userCreated = await this.userRepo.save(user);
     return toAuthDTO(userCreated);
-  }
-
-  async updateRefreshToken(
-    userUUID: string,
-    refreshToken: string | null,
-  ): Promise<void> {
-    await this.userRepo.update({ uuid: userUUID }, { refreshToken });
   }
 }

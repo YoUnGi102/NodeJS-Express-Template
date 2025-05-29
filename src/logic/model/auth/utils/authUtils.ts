@@ -2,8 +2,6 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { JWTPayload } from '@src/logic/shared/types/auth.types';
 import { ERRORS } from '@src/logic/shared/utils/errors';
-import { createHash } from 'crypto';
-import bcrypt from 'bcryptjs';
 
 const signRefreshToken = (userUUID: string) => {
   const refreshToken = jwt.sign(
@@ -55,21 +53,4 @@ const verifyAccessToken = (token?: string): JWTPayload => {
   return decoded;
 };
 
-const compare = async (
-  value: string,
-  hashedValue: string,
-): Promise<boolean> => {
-  const hash = createHash('sha256').update(value).digest('hex');
-  return await bcrypt.compare(hash, hashedValue);
-};
-
-const hash = async (value: string, salt: number): Promise<string> => {
-  const hash = createHash('sha256').update(value).digest('hex');
-  return await bcrypt.hash(hash, salt);
-};
-
 export default { signAccessToken, signRefreshToken, verifyAccessToken };
-export const hashUtils = {
-  compare,
-  hash,
-};
