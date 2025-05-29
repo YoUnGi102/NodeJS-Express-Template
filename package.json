@@ -36,6 +36,9 @@
     "url": "https://github.com/YoUnGi102/NodeJS-Express-Template/issues"
   },
   "homepage": "https://github.com/YoUnGi102/NodeJS-Express-Template#readme",
+  "lint-staged": {
+    "**/*.{ts,tsx,js,json,md}": ["prettier --write"]
+  },
   "dependencies": {
     "@goodrequest/joi-type-extract": "^0.0.4",
     "bcryptjs": "^3.0.2",
@@ -70,8 +73,10 @@
     "cross-env": "^7.0.3",
     "depcheck": "^1.4.7",
     "dotenv": "^16.5.0",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-environment-node": "^29.7.0",
+    "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
     "sqlite3": "^5.1.7",
     "supertest": "^7.1.1",
