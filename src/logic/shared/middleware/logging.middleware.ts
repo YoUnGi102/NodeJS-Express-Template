@@ -6,6 +6,8 @@ const SLOW_REQUEST_THRESHOLD_MS = parseInt(
   10,
 );
 
+const NODE_ENV = process.env.NODE_ENV;
+
 export const loggingMiddleware = (
   req: Request,
   res: Response,
@@ -23,12 +25,14 @@ export const loggingMiddleware = (
       logger.warn(`Slow request: ${msg}`);
     }
 
-    if (statusCode >= 500) {
-      logger.error(msg);
-    } else if (statusCode >= 400) {
-      logger.warn(msg);
-    } else {
-      logger.info(msg);
+    if (NODE_ENV !== 'test') {
+      if (statusCode >= 500) {
+        logger.error(msg);
+      } else if (statusCode >= 400) {
+        logger.warn(msg);
+      } else {
+        logger.info(msg);
+      }
     }
   });
 
