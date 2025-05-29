@@ -21,8 +21,8 @@ export class AuthController implements IAuthController {
       const authRequest = req.body as AuthLoginRequest;
       const sessionInfo: AuthSessionInfo = {
         ipAddress: req.ip,
-        userAgent: req.get('User-Agent')
-      }
+        userAgent: req.get('User-Agent'),
+      };
       const auth = await this.authService.login(authRequest, sessionInfo);
       res.status(200).json(auth);
     } catch (err) {
@@ -39,8 +39,8 @@ export class AuthController implements IAuthController {
       const authRequest = req.body as AuthRegisterRequest;
       const sessionInfo: AuthSessionInfo = {
         ipAddress: req.ip,
-        userAgent: req.get('User-Agent')
-      }
+        userAgent: req.get('User-Agent'),
+      };
       const auth = await this.authService.register(authRequest, sessionInfo);
       res.status(201).json(auth);
     } catch (err) {

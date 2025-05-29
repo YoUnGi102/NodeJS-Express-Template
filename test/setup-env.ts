@@ -1,4 +1,9 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
-dotenv.config({ path: path.resolve(__dirname, '../.env.test') });
+const envTestPath = path.resolve(__dirname, '../.env.test');
+
+if (fs.existsSync(envTestPath)) {
+  dotenv.config({ path: envTestPath });
+}
