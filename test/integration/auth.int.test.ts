@@ -2,7 +2,7 @@ import request from 'supertest';
 import { Express } from 'express';
 import { AuthRegisterRequest, AuthResponse } from '@model/auth/auth.types';
 import { MESSAGES } from '@src/logic/shared/utils/errors/errorMessages';
-import { User } from '@src/database/entities';
+import { User, UserSession } from '@src/database/entities';
 import { setupIntegration } from './setup';
 import {
   createTestUser,
@@ -11,14 +11,17 @@ import {
 } from '../utils/factories';
 import authTokenUtils from '@src/logic/model/auth/utils/authUtils';
 import { Repository } from 'typeorm';
+import hashUtils from '@src/logic/shared/utils/hashUtils';
 
 let app: Express;
 let userRepo: Repository<User>;
+let sessionRepo: Repository<UserSession>;
 
 beforeAll(async () => {
   const config = await setupIntegration();
   app = config.app;
   userRepo = config.testDataSource.getRepository(User);
+  sessionRepo = config.testDataSource.getRepository(UserSession);
 });
 
 afterAll(async () => {});
@@ -34,9 +37,8 @@ describe('POST /auth/register', () => {
     // Act
     const res = await request(app).post(AUTH_REGISTER_URL).send(userRequest);
 
-    const userInDB = await userRepo.findOneBy({ uuid: res.body.user.uuid });
-
     // Assert
+    const userInDB = await userRepo.findOneBy({ uuid: res.body.user.uuid });
     expect(res.status).toBe(201);
     expect(res.body).toBeDefined();
     expect(res.body).toEqual<AuthResponse>(
@@ -230,15 +232,15 @@ describe('POST auth/login', () => {
     );
   });
 
-  it('should store hashed refresh token in databse', async () => {
+  it('should create a session when user registers', async () => {
     const { user, refreshToken } = (await createTestUser(app))[0];
 
-    const userFromDB = await userRepo.findOne({
-      where: { uuid: user.uuid },
-      select: { refreshToken: true },
+    const session = await sessionRepo.findOne({
+      where: { refreshToken: hashUtils.sha256(refreshToken) },
+      relations: ['user'],
     });
-
-    expect(refreshToken).not.toEqual(userFromDB!.refreshToken);
+    expect(session).toBeDefined();
+    expect(session!.user.username).toEqual(user.username);
   });
 });
 
@@ -287,24 +289,22 @@ describe('POST /auth/refresh', () => {
 describe('POST /auth/logout', () => {
   const POST_AUTH_LOGOUT = `${BASE_URL}/logout`;
 
-  it('should delete refreshToken from database when user logs out', async () => {
+  it('it should invalidate the session when user logs out', async () => {
     // Arrange
-    const { user, refreshToken } = (await createTestUser(app))[0];
+    const { refreshToken } = (await createTestUser(app))[0];
 
     // Act
     const res = await request(app)
       .post(POST_AUTH_LOGOUT)
       .send({ refreshToken });
 
-    const updatedUser = await userRepo.findOne({
-      where: { uuid: user.uuid },
-      select: { uuid: true, refreshToken: true },
+    const session = await sessionRepo.findOneBy({
+      refreshToken: hashUtils.sha256(refreshToken),
     });
 
     // Assert
     expect(res.status).toBe(204);
-    expect(updatedUser).toBeDefined();
-    expect(updatedUser!.refreshToken).toBeNull();
+    expect(session).toBeNull();
   });
 
   it('should return 401 if refresh token is invalid', async () => {

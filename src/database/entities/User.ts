@@ -19,9 +19,6 @@ export class User extends AuditableEntityUUID {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
-  @Column({ type: 'varchar', nullable: true, unique: true, select: false })
-  refreshToken?: string | null;
-
   @OneToMany(() => UserSession, (session) => session.user)
   sessions?: UserSession[];
 

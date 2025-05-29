@@ -6,8 +6,9 @@ export interface ISessionService {
     ipAddress?: string,
     userAgent?: string,
   ): Promise<UserSessionDTO>;
-  findByToken(refreshToken: string): Promise<UserSessionDTO | null>;
+  findByToken(refreshToken: string): Promise<UserSessionDTO>;
   revokeAllForUser(userUUID: string): Promise<void>;
-  revokeById(sessionId: string): Promise<void>;
+  revokeSession(sessionId: string): Promise<void>;
   getActiveSessions(userUUID: string): Promise<UserSessionDTO[]>;
+  rotateRefreshToken(userUUID: string, oldToken: string): Promise<string>;
 }

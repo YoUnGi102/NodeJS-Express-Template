@@ -1,7 +1,7 @@
 import { UserSession } from '@src/database/entities/UserSession';
 import { UserSessionDTO } from '../session.types';
 import jwt from 'jsonwebtoken';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { JWTPayload } from '@src/logic/shared/types/auth.types';
 import { ERRORS } from '@src/logic/shared/utils/errors';
 
@@ -30,12 +30,12 @@ export const verifyRefreshToken = (refreshToken: string): JWTPayload => {
     ) as JWTPayload;
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError) {
-      throw ERRORS.AUTH.ACCESS_TOKEN_EXPIRED();
+      throw ERRORS.AUTH.REFRESH_TOKEN_EXPIRED();
     }
-    throw err;
+    throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
   }
   return jwtPayload;
-}
+};
 
 export const toUserSessionDTO = (session: UserSession): UserSessionDTO => ({
   id: session.id,
@@ -45,4 +45,10 @@ export const toUserSessionDTO = (session: UserSession): UserSessionDTO => ({
   refreshToken: session.refreshToken,
   userAgent: session.userAgent,
   ipAddress: session.ipAddress,
+  user: {
+    username: session.user.username,
+    email: session.user.email,
+    uuid: session.user.uuid,
+    createdAt: session.user.uuid,
+  },
 });

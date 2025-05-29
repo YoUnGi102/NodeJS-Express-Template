@@ -31,11 +31,18 @@ export class TypeormSessionRepository implements ISessionRepository {
       userAgent,
     });
     const sessionCreated = await this.sessionRepo.save(session);
-    return toUserSessionDTO(sessionCreated);
+    const sessionFound = await this.sessionRepo.findOneOrFail({
+      where: { id: sessionCreated.id },
+      relations: ['user'],
+    });
+    return toUserSessionDTO(sessionFound);
   }
 
   async findByToken(refreshToken: string): Promise<UserSessionDTO | null> {
-    const session = await this.sessionRepo.findOneBy({ refreshToken });
+    const session = await this.sessionRepo.findOne({
+      where: { refreshToken },
+      relations: ['user'],
+    });
     return session ? toUserSessionDTO(session) : null;
   }
 
@@ -53,9 +60,17 @@ export class TypeormSessionRepository implements ISessionRepository {
   }
 
   async getActiveSessions(userUUID: string): Promise<UserSessionDTO[]> {
-    const sessions = await this.sessionRepo.findBy({
-      user: { uuid: userUUID },
+    const sessions = await this.sessionRepo.find({
+      where: { user: { uuid: userUUID } },
+      relations: ['user'],
     });
-    return sessions;
+    return sessions.map((s) => toUserSessionDTO(s));
+  }
+
+  async updateRefreshToken(oldToken: string, newToken: string): Promise<void> {
+    await this.sessionRepo.update(
+      { refreshToken: oldToken },
+      { refreshToken: newToken },
+    );
   }
 }

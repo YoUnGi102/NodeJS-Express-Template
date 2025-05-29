@@ -6,4 +6,10 @@ export interface UserSessionDTO {
   refreshToken: string;
   userAgent?: string | null;
   ipAddress?: string | null;
+  user: {
+    uuid: string;
+    username: string;
+    email: string;
+    createdAt: string;
+  };
 }

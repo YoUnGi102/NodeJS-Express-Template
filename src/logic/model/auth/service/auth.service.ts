@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import {
   AuthLoginRequest,
   AuthResponse,
@@ -7,21 +6,19 @@ import {
 import { ERRORS } from '@src/logic/shared/utils/errors';
 import { inject, injectable } from 'tsyringe';
 import { IAuthService } from './auth.service.interface';
-import { JWTPayload } from '@src/logic/shared/types/auth.types';
 import { toAuthResponse } from '../utils/helpers';
-import logger from '@src/logic/shared/utils/logger';
 import authTokenUtils from '../utils/authUtils';
 import hashUtils from '@src/logic/shared/utils/hashUtils';
 import { INJECTION_TOKENS } from '@src/config';
 import { IAuthRepository } from '../repository/auth.repository.interface';
 import { ISessionService } from '../../session/service/session.service.interface';
-import { verifyRefreshToken } from '../../session/utils/helper';
 
 @injectable()
 export class AuthService implements IAuthService {
   constructor(
     @inject(INJECTION_TOKENS.IAuthRepository) private authRepo: IAuthRepository,
-    @inject(INJECTION_TOKENS.ISessionService) private sessionService: ISessionService
+    @inject(INJECTION_TOKENS.ISessionService)
+    private sessionService: ISessionService,
   ) {}
 
   async login({ username, password }: AuthLoginRequest): Promise<AuthResponse> {
@@ -43,7 +40,7 @@ export class AuthService implements IAuthService {
     );
 
     // TODO Add IP and User Agent
-    const {refreshToken} = await this.sessionService.createSession(auth.uuid);
+    const { refreshToken } = await this.sessionService.createSession(auth.uuid);
 
     return toAuthResponse(token, refreshToken, auth);
   }
@@ -72,27 +69,26 @@ export class AuthService implements IAuthService {
       user.uuid,
       user.email,
     );
-    
+
     // TODO Add IP and User Agent
-    const {refreshToken} = await this.sessionService.createSession(user.uuid);
+    const { refreshToken } = await this.sessionService.createSession(user.uuid);
 
     return toAuthResponse(token, refreshToken, user);
   }
 
   async refreshAccessToken(refreshToken: string): Promise<AuthResponse> {
-    const jwtPayload = verifyRefreshToken(refreshToken);
+    const session = await this.sessionService.findByToken(refreshToken);
 
-    const user = await this.authRepo.getUserByUUID(jwtPayload.uuid);
+    const user = await this.authRepo.getUserByUUID(session.user.uuid);
     if (!user) {
       throw ERRORS.AUTH.USER_NOT_FOUND();
     }
 
-    const isValid = await hashUtils.compare(refreshToken, user.refreshToken!);
-    if (!isValid) {
-      throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
-    }
+    const newRefreshToken = await this.sessionService.rotateRefreshToken(
+      user.uuid,
+      refreshToken,
+    );
 
-    const newRefreshToken = await this.generateRefreshToken(user.uuid);
     const token = authTokenUtils.signAccessToken(
       user.username,
       user.uuid,
@@ -105,37 +101,6 @@ export class AuthService implements IAuthService {
   }
 
   async logout(refreshToken: string): Promise<void> {
-    let jwtPayload: JWTPayload | null = null;
-    try {
-      jwtPayload = jwt.verify(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET!,
-      ) as JWTPayload;
-    } catch (err) {
-      // If expired, attempts to decode it
-      const decoded = jwt.decode(refreshToken) as JWTPayload | null;
-
-      if (decoded && decoded.uuid) {
-        jwtPayload = decoded;
-        logger.warn(
-          `Expired refresh token used for logout, using decoded payload ${err}`,
-        );
-      } else {
-        throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
-      }
-    }
-
-    await this.authRepo.updateRefreshToken(jwtPayload.uuid, null);
-  }
-
-  // Generate, Hash and Save new Refresh Token
-  private async generateRefreshToken(userUUID: string): Promise<string> {
-    const refreshToken = authTokenUtils.signRefreshToken(userUUID);
-
-    // Update Hashed Refresh Token
-    const hashedRefreshToken = await hashUtils.hash(refreshToken, 10);
-    await this.authRepo.updateRefreshToken(userUUID, hashedRefreshToken);
-
-    return refreshToken;
+    await this.sessionService.revokeSession(refreshToken);
   }
 }

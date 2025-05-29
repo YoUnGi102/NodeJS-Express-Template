@@ -14,6 +14,7 @@ const hash = async (value: string, salt: number = 10): Promise<string> => {
   return await bcrypt.hash(hash, salt);
 };
 
-const sha256 = (value: string) => createHash('sha256').update(value).digest('hex');
+const sha256 = (value: string) =>
+  createHash('sha256').update(value).digest('hex');
 
-export default {compare, hash, sha256}
+export default { compare, hash, sha256 };

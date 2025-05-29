@@ -11,4 +11,5 @@ export interface ISessionRepository {
   revokeSession(refreshToken: string): Promise<void>;
   revokeAllForUser(userUUID: string): Promise<void>;
   getActiveSessions(userUUID: string): Promise<UserSessionDTO[]>;
+  updateRefreshToken(oldToken: string, newToken: string): Promise<void>;
 }
