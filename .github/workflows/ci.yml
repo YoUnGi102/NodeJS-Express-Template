@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22]
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🟢 Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: ✅ Check formatting
+        run: npm run format:check
+
+      - name: 🔬 Lint code
+        run: npm run lint
+
+      - name: 🧪 Run tests
+        env:
+          NODE_ENV: test
+          JWT_REFRESH_SECRET: test_refresh_secret
+          JWT_ACCESS_SECRET: test_access_secret
+          HIDE_API_ERRORS: true
+          HIDE_API_LOGS: true
+        run: npm run test
+
+      - name: 🏗️ Build project
+        run: npm run build
