@@ -1,9 +1,6 @@
 import 'reflect-metadata';
-import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import { User, UserSession } from '@database/entities';
-
-dotenv.config();
 
 const AppDataSource = new DataSource({
   type: 'postgres',

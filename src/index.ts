@@ -8,6 +8,7 @@ import { container } from 'tsyringe';
 import { DataSource } from 'typeorm';
 
 dotenv.config();
+logger.info(`NODE_ENV=${process.env.NODE_ENV}`)
 
 const NODE_ENV = process.env.NODE_ENV;
 const PORT = process.env.PORT || 5000;

@@ -1,18 +1,31 @@
-FROM node:18
+# -------- Build Stage --------
+FROM node:22.1.0-alpine AS builder
 
 WORKDIR /app
 
+# Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-COPY . . 
-
+# Copy rest of the code and build
+COPY . .
 RUN npm run build
 
-# Debug step to list files in dist/ directory
-RUN ls -l dist
+# -------- Runtime Stage --------
+FROM node:22.1.0-alpine
+
+WORKDIR /app
+
+# Only production deps
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy built app
+COPY --from=builder /app/dist ./dist
+
+# Copy env file (for local, not production best practice)
+COPY .env ./ 
 
 EXPOSE 3000
 
-# Run migration then start the server
-CMD ["sh", "-c", "npx typeorm migration:run -d dist/data-source.js && node dist/server.js"]
+CMD ["node", "dist/index.js"]
