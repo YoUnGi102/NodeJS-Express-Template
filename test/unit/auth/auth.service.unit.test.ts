@@ -9,7 +9,10 @@ import { setupApp } from '../setup';
 import { container } from 'tsyringe';
 import { IAuthService } from '@src/logic/model/auth/service/auth.service.interface';
 import { INJECTION_TOKENS } from '@src/config';
-import { AuthLoginRequest, AuthResponse } from '@src/logic/model/auth/auth.types';
+import {
+  AuthLoginRequest,
+  AuthResponse,
+} from '@src/logic/model/auth/auth.types';
 import hashUtils from '@src/logic/shared/utils/hashUtils';
 import { ISessionRepository } from '@src/logic/model/session/repository/session.repository.interface';
 
@@ -28,22 +31,21 @@ beforeAll(async () => {
 afterAll(async () => {});
 
 describe('IAuthService', () => {
-
   describe('register', () => {
-    it('should create a user if request is valid', async ()=>{
+    it('should create a user if request is valid', async () => {
       // Arrange
       const userRequest = createTestUserRequest();
 
       // Act
-      const authResponse: AuthResponse = await authService.register(userRequest);
+      const authResponse: AuthResponse =
+        await authService.register(userRequest);
 
       // Assert
       expect(authResponse).toBeDefined();
       expect(authResponse.user).toBeDefined();
       expect(authResponse.user.username).toEqual(userRequest.username);
-
-    })
-  })
+    });
+  });
 
   describe('generateRefreshToken', () => {
     it('should not accept old refresh token for refresh', async () => {
