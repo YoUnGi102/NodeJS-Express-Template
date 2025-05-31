@@ -8,7 +8,7 @@
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
     "build": "tsup",
-    "ci": "npm ci && npm run format && npm run test && npm run lint",
+    "commit:check": "npm run format && npm run lint && npm run test && npm run build",
     "test:integration": "npx jest --config jest.config.integration.ts",
     "test:unit": "npx jest --config jest.config.unit.ts",
     "test": "npm run test:integration && npm run test:unit",
