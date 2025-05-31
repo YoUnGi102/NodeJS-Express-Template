@@ -7,7 +7,7 @@
   "arrowParens": "always",
   "bracketSpacing": true,
   "bracketSameLine": true,
-  "endOfLine": "lf",
+  "endOfLine": "crlf",
   "quoteProps": "as-needed",
   "htmlWhitespaceSensitivity": "css",
   "proseWrap": "preserve",
