@@ -28,22 +28,8 @@ beforeAll(async () => {
 
 afterAll(async () => {});
 
-describe('IAuthService - generateRefreshToken', () => {
-  // TODO put in utils
-  it('should return a different refresh token on each call', async () => {
-    // Arrange
-    const userUUID = 'test-user-uuid';
-
-    // Act
-    const token1 = authTokenUtils.signRefreshToken(userUUID);
-    const token2 = authTokenUtils.signRefreshToken(userUUID);
-
-    // Assert
-    expect(typeof token1).toBe('string');
-    expect(typeof token2).toBe('string');
-    expect(token1).not.toEqual(token2);
-  });
-
+describe('IAuthService', () => {
+  describe('generateRefreshToken', () => {
   it('should not accept old refresh token for refresh', async () => {
     // Arrange
     const userRequest = createTestUserRequest();
@@ -61,7 +47,7 @@ describe('IAuthService - generateRefreshToken', () => {
     ).rejects.toThrow(ERRORS.AUTH.REFRESH_TOKEN_INVALID().message);
   });
 
-  describe('IAuthService - login', () => {
+  describe('login', () => {
     it('should create a session when user logs in', async () => {
       // Arrange
       const { user } = (await createTestUser(app))[0];
@@ -84,3 +70,4 @@ describe('IAuthService - generateRefreshToken', () => {
     });
   });
 });
+})

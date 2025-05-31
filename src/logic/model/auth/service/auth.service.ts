@@ -26,7 +26,7 @@ export class AuthService implements IAuthService {
     { username, password }: AuthLoginRequest,
     sessionInfo: AuthSessionInfo = {},
   ): Promise<AuthResponse> {
-    const auth = await this.authRepo.getUserWithPassword(username);
+    const auth = await this.authRepo.findByUsernameWithPassword(username);
     if (!auth) {
       throw ERRORS.AUTH.CREDENTIALS_INVALID();
     }
@@ -56,7 +56,7 @@ export class AuthService implements IAuthService {
     request: AuthRegisterRequest,
     sessionInfo: AuthSessionInfo = {},
   ): Promise<AuthResponse> {
-    const userExists = await this.authRepo.getUserWithUsernameOrEmail(
+    const userExists = await this.authRepo.findByUsernameOrEmail(
       request.username,
       request.email,
     );
@@ -72,7 +72,7 @@ export class AuthService implements IAuthService {
       password: hashedPassword,
     };
 
-    const user = await this.authRepo.createUser(hashedRequest);
+    const user = await this.authRepo.create(hashedRequest);
     if (!user) {
       throw ERRORS.AUTH.REGISTRATION_FAILED();
     }
@@ -95,7 +95,7 @@ export class AuthService implements IAuthService {
   async refreshAccessToken(refreshToken: string): Promise<AuthResponse> {
     const session = await this.sessionService.findByToken(refreshToken);
 
-    const user = await this.authRepo.getUserByUUID(session.user.uuid);
+    const user = await this.authRepo.findByUUID(session.user.uuid);
     if (!user) {
       throw ERRORS.AUTH.USER_NOT_FOUND();
     }
@@ -111,7 +111,7 @@ export class AuthService implements IAuthService {
       user.email,
     );
 
-    const updatedUser = await this.authRepo.getUserByUUID(user.uuid);
+    const updatedUser = await this.authRepo.findByUUID(user.uuid);
 
     return toAuthResponse(token, newRefreshToken, updatedUser!);
   }

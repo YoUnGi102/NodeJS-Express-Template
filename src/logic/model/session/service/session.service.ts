@@ -22,11 +22,11 @@ export class SessionService implements ISessionService {
     const refreshToken = signRefreshToken(userUUID);
     const hashedRefreshToken = hashUtils.sha256(refreshToken);
 
-    const session = await this.sessionRepo.createSession({
+    const session = await this.sessionRepo.create({
       userUUID,
       ipAddress,
       userAgent,
-      refreshToken: hashedRefreshToken
+      refreshToken: hashedRefreshToken,
     });
 
     return { ...session, refreshToken };
@@ -45,14 +45,14 @@ export class SessionService implements ISessionService {
   }
 
   async revokeAllForUser(userUUID: string): Promise<void> {
-    await this.sessionRepo.revokeAllForUser(userUUID);
+    await this.sessionRepo.deleteAllForUser(userUUID);
   }
 
   async revokeSession(refreshToken: string): Promise<void> {
     verifyRefreshToken(refreshToken);
 
     const hash = hashUtils.sha256(refreshToken);
-    await this.sessionRepo.revokeSession(hash);
+    await this.sessionRepo.delete(hash);
   }
 
   async getActiveSessions(userUUID: string): Promise<UserSessionDTO[]> {

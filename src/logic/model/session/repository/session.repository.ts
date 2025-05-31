@@ -28,9 +28,7 @@ export class TypeormSessionRepository implements ISessionRepository {
     this.userRepo = this.dataSource.getRepository(User);
   }
 
-  async createSession(
-    sessionRequest: UserSessionRequest,
-  ): Promise<UserSessionDTO> {
+  async create(sessionRequest: UserSessionRequest): Promise<UserSessionDTO> {
     const { userUUID, userAgent, ipAddress, refreshToken }: UserSessionRequest =
       sessionRequest;
 
@@ -63,11 +61,11 @@ export class TypeormSessionRepository implements ISessionRepository {
     return session ? toUserSessionDTO(session) : null;
   }
 
-  async revokeSession(refreshToken: string): Promise<void> {
+  async delete(refreshToken: string): Promise<void> {
     await this.sessionRepo.softDelete({ refreshToken });
   }
 
-  async revokeAllForUser(userUUID: string): Promise<void> {
+  async deleteAllForUser(userUUID: string): Promise<void> {
     const sessions = await this.findByUserUUID(userUUID);
     for (const session of sessions) {
       await this.sessionRepo.softDelete({ id: session.id });

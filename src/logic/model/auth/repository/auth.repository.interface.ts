@@ -11,7 +11,7 @@ export interface IAuthRepository {
    * @param email - The email to check.
    * @returns The user DTO if a match is found, otherwise null.
    */
-  getUserWithUsernameOrEmail(
+  findByUsernameOrEmail(
     username: string,
     email: string,
   ): Promise<AuthDTO | null>;
@@ -24,7 +24,7 @@ export interface IAuthRepository {
    * @param username - The username of the user.
    * @returns The user DTO including the hashed password, or null if not found.
    */
-  getUserWithPassword(username: string): Promise<AuthDTO | null>;
+  findByUsernameWithPassword(username: string): Promise<AuthDTO | null>;
 
   /**
    * Retrieves a user by their UUID.
@@ -32,7 +32,7 @@ export interface IAuthRepository {
    * @param uuid - The UUID of the user.
    * @returns The user DTO if found, otherwise null.
    */
-  getUserByUUID(uuid: string): Promise<AuthDTO | null>;
+  findByUUID(uuid: string): Promise<AuthDTO | null>;
 
   /**
    * Creates and persists a new user.
@@ -40,5 +40,5 @@ export interface IAuthRepository {
    * @param auth - The registration request data.
    * @returns The created user DTO.
    */
-  createUser(auth: AuthRegisterRequest): Promise<AuthDTO>;
+  create(auth: AuthRegisterRequest): Promise<AuthDTO>;
 }

@@ -23,13 +23,13 @@ beforeAll(async () => {
 afterAll(async () => {});
 
 describe('IAuthRepository', () => {
-  describe('getUserByUUID', () => {
+  describe('findByUUID', () => {
     it('should return user if valid UUID passed', async () => {
       // Arrange
       const { user }: AuthResponse = (await createTestUser(app))[0];
 
       // Act
-      const userFound = await authRepository.getUserByUUID(user.uuid);
+      const userFound = await authRepository.findByUUID(user.uuid);
 
       // Assert
       expect(userFound).toBeDefined();
@@ -49,13 +49,13 @@ describe('IAuthRepository', () => {
     // TODO 'should not return user if user exists but is not active'
   });
 
-  describe('getUserWithUsernameOrEmail', () => {
+  describe('findByUsernameOrEmail', () => {
     it('should return user if user exists', async () => {
       // Arrange
       const { user }: AuthResponse = (await createTestUser(app))[0];
 
       // Act
-      const userFound = await authRepository.getUserWithUsernameOrEmail(
+      const userFound = await authRepository.findByUsernameOrEmail(
         user.username,
         user.email,
       );
@@ -80,7 +80,7 @@ describe('IAuthRepository', () => {
       const email = 'john.doe@example.com';
 
       // Act
-      const userFound = await authRepository.getUserWithUsernameOrEmail(
+      const userFound = await authRepository.findByUsernameOrEmail(
         username,
         email,
       );
@@ -96,7 +96,9 @@ describe('IAuthRepository', () => {
       const { user }: AuthResponse = (await createTestUser(app))[0];
 
       // Act
-      const userFound = await authRepository.getUserWithPassword(user.username);
+      const userFound = await authRepository.findByUsernameWithPassword(
+        user.username,
+      );
 
       // Assert
       expect(userFound).toBeDefined();
@@ -113,13 +115,13 @@ describe('IAuthRepository', () => {
     });
   });
 
-  describe('createUser', () => {
+  describe('create', () => {
     it('should create user if valid request provided', async () => {
       // Arrange
       const userRequest: AuthRegisterRequest = createTestUserRequest();
 
       // Act
-      const userCreated = await authRepository.createUser(userRequest);
+      const userCreated = await authRepository.create(userRequest);
 
       // Assert
       expect(userCreated).toBeDefined();

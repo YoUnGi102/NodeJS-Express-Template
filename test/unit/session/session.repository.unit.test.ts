@@ -21,7 +21,7 @@ beforeAll(async () => {
 afterAll(async () => {});
 
 describe('ISessionRepository', () => {
-  describe('createSession', () => {
+  describe('create', () => {
     it('should create a session if valid user.UUID', async () => {
       // Arrange
       const { user }: AuthResponse = (await createTestUser(app))[0];
@@ -35,7 +35,7 @@ describe('ISessionRepository', () => {
       };
 
       // Act
-      const session = await sessionRepo.createSession(sessionRequest);
+      const session = await sessionRepo.create(sessionRequest);
 
       // Assert
       expect(session).toBeDefined();
@@ -59,14 +59,14 @@ describe('ISessionRepository', () => {
     });
   });
 
-  describe('revokeSession', () => {
+  describe('delete', () => {
     it('should soft delete session if valid refreshToken passed', async () => {
       // Arrange
       const { user }: AuthResponse = (await createTestUser(app))[0];
       const session = await createTestSessionForUser(sessionRepo, user.uuid);
 
       // Act
-      await sessionRepo.revokeSession(session.refreshToken);
+      await sessionRepo.delete(session.refreshToken);
       const foundSession = await sessionRepo.findByToken(session.refreshToken);
 
       // Assert
@@ -74,7 +74,7 @@ describe('ISessionRepository', () => {
     });
   });
 
-  describe('revokeAllForUser', () => {
+  describe('deleteAllForUser', () => {
     it('should soft delete session if valid refreshToken passed', async () => {
       // Arrange
       const { user }: AuthResponse = (await createTestUser(app))[0];
@@ -85,7 +85,7 @@ describe('ISessionRepository', () => {
       );
 
       // Act
-      await sessionRepo.revokeAllForUser(user.uuid);
+      await sessionRepo.deleteAllForUser(user.uuid);
       const foundSession = await sessionRepo.getActiveSessions(user.uuid);
 
       // Assert

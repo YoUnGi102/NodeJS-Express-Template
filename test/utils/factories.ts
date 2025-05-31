@@ -53,7 +53,7 @@ export const createTestSessionForUser = async (
   sessionRepo: ISessionRepository,
   userUUID: string,
 ) => {
-  const session = await sessionRepo.createSession({
+  const session = await sessionRepo.create({
     ...SESSION_INFO,
     userUUID: userUUID,
     refreshToken: authUtils.signRefreshToken(userUUID),
