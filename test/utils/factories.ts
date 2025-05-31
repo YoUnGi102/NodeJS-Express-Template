@@ -2,13 +2,19 @@ import { Express } from 'express';
 import {
   AuthRegisterRequest,
   AuthResponse,
+  AuthSessionInfo,
 } from '../../src/logic/model/auth/auth.types';
 import request from 'supertest';
 import authUtils from '@src/logic/model/auth/utils/authUtils';
-import { DataSource } from 'typeorm';
-import { User, UserSession } from '@src/database/entities';
+import { ISessionRepository } from '@src/logic/model/session/repository/session.repository.interface';
 
 export const TEST_PASSWORD = 'Test123.+';
+
+export const SESSION_INFO: AuthSessionInfo = {
+  ipAddress: '102.229.30.1',
+  userAgent:
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+};
 
 export const createTestUserRequest = (
   userOverrides: Partial<AuthRegisterRequest> = {},
@@ -44,21 +50,13 @@ export const createTestUser = async (
 };
 
 export const createTestSessionForUser = async (
-  dataSource: DataSource,
+  sessionRepo: ISessionRepository,
   userUUID: string,
 ) => {
-  const user = await dataSource
-    .getRepository(User)
-    .findOneByOrFail({ uuid: userUUID });
-  const sessionCreate = dataSource.getRepository(UserSession).create({
-    user,
-    ipAddress: '102.229.30.1',
-    userAgent:
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+  const session = await sessionRepo.create({
+    ...SESSION_INFO,
+    userUUID: userUUID,
     refreshToken: authUtils.signRefreshToken(userUUID),
   });
-  const session = await dataSource
-    .getRepository(UserSession)
-    .save(sessionCreate);
   return session;
 };

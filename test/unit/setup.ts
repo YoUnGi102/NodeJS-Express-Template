@@ -6,13 +6,10 @@ import { createTestDataSource } from '../global-setup';
 import { container } from 'tsyringe';
 import { createApp } from '@src/app';
 
-export const setupUnit = async (): Promise<{
-  app: Express;
-  testDataSource: DataSource;
-}> => {
+export const setupApp = async (): Promise<Express> => {
   const testDataSource = createTestDataSource();
   await testDataSource.initialize();
   container.registerInstance(DataSource, testDataSource);
   const app = await createApp(container.resolve(DataSource));
-  return { app, testDataSource };
+  return app;
 };

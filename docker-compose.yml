@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db:
+    env_file:
+      - .env.production
+    image: postgres:15
+    container_name: pg-database
+    restart: always
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: nodejs-app
+    depends_on:
+      - db
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env.production
+    environment:
+      DB_HOST: db
+volumes:
+  pgdata:
