@@ -1,4 +1,3 @@
-// src/middleware/authMiddleware.factory.ts
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ERRORS } from '../utils/errors';
@@ -10,15 +9,25 @@ export const authMiddleware = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return next(ERRORS.AUTH.ACCESS_TOKEN_INVALID());
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return next(ERRORS.AUTH.ACCESS_TOKEN_INVALID());
+    }
+
     const payload = authTokenUtils.verifyAccessToken(token);
     req.auth = payload;
     next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       next(ERRORS.AUTH.ACCESS_TOKEN_EXPIRED());
-      return;
     }
-    next(error);
+
+    next(ERRORS.AUTH.ACCESS_TOKEN_INVALID());
   }
 };

@@ -21,33 +21,38 @@ export class SessionService implements ISessionService {
   ): Promise<UserSessionDTO> {
     const refreshToken = signRefreshToken(userUUID);
     const hashedRefreshToken = hashUtils.sha256(refreshToken);
-    const session = await this.sessionRepo.createSession(
+
+    const session = await this.sessionRepo.create({
       userUUID,
-      hashedRefreshToken,
       ipAddress,
       userAgent,
-    );
+      refreshToken: hashedRefreshToken,
+    });
+
     return { ...session, refreshToken };
   }
   async findByToken(refreshToken: string): Promise<UserSessionDTO> {
     verifyRefreshToken(refreshToken);
 
     const hash = hashUtils.sha256(refreshToken);
+
     const session = await this.sessionRepo.findByToken(hash);
     if (!session) {
       throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
     }
+
     return session;
   }
+
   async revokeAllForUser(userUUID: string): Promise<void> {
-    await this.sessionRepo.revokeAllForUser(userUUID);
+    await this.sessionRepo.deleteAllForUser(userUUID);
   }
 
   async revokeSession(refreshToken: string): Promise<void> {
     verifyRefreshToken(refreshToken);
 
     const hash = hashUtils.sha256(refreshToken);
-    await this.sessionRepo.revokeSession(hash);
+    await this.sessionRepo.delete(hash);
   }
 
   async getActiveSessions(userUUID: string): Promise<UserSessionDTO[]> {
@@ -59,13 +64,14 @@ export class SessionService implements ISessionService {
     oldToken: string,
   ): Promise<string> {
     const hashedOldToken = hashUtils.sha256(oldToken);
+
     const session = await this.sessionRepo.findByToken(hashedOldToken);
     if (!session) {
       throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
     }
+
     const newToken = signRefreshToken(userUUID);
     const hashedNewToken = hashUtils.sha256(newToken);
-
     await this.sessionRepo.updateRefreshToken(hashedOldToken, hashedNewToken);
 
     return newToken;
