@@ -6,29 +6,24 @@ import {
   TEST_PASSWORD,
 } from '../../utils/factories';
 import { ERRORS } from '@src/logic/shared/utils/errors';
-import { setupUnit } from '../setup';
-// import { IAuthRepository } from '@src/logic/model/auth/repository/auth.repository.interface';
+import { setupApp } from '../setup';
 import { container } from 'tsyringe';
 import { IAuthService } from '@src/logic/model/auth/service/auth.service.interface';
-import { DataSource } from 'typeorm';
 import { INJECTION_TOKENS } from '@src/config';
 import { AuthLoginRequest } from '@src/logic/model/auth/auth.types';
-import { UserSession } from '@src/database/entities';
 import hashUtils from '@src/logic/shared/utils/hashUtils';
+import { ISessionRepository } from '@src/logic/model/session/repository/session.repository.interface';
 
-// let authRepository: IAuthRepository;
-let testDataSource: DataSource;
 let authService: IAuthService;
+let sessionRepo: ISessionRepository;
 let app: Express;
 
 beforeAll(async () => {
-  const config = await setupUnit();
-  app = config.app;
-  testDataSource = config.testDataSource;
-  // authRepository = container.resolve<IAuthRepository>(
-  //   INJECTION_TOKENS.IAuthRepository,
-  // );
+  app = await setupApp();
   authService = container.resolve<IAuthService>(INJECTION_TOKENS.IAuthService);
+  sessionRepo = container.resolve<ISessionRepository>(
+    INJECTION_TOKENS.ISessionRepository,
+  );
 });
 
 afterAll(async () => {});
@@ -79,9 +74,7 @@ describe('IAuthService - generateRefreshToken', () => {
       const loginRes = await authService.login(loginReq);
 
       const hashedToken = hashUtils.sha256(loginRes.refreshToken);
-      const session = await testDataSource
-        .getRepository(UserSession)
-        .findOne({ where: { refreshToken: hashedToken }, relations: ['user'] });
+      const session = await sessionRepo.findByToken(hashedToken);
 
       // Assert
       expect(session).toBeDefined();

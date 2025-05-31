@@ -6,7 +6,7 @@ import authTokenUtils from '@src/logic/model/auth/utils/authUtils';
 export const authMiddleware = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;

@@ -56,7 +56,7 @@ export class AuthService implements IAuthService {
     request: AuthRegisterRequest,
     sessionInfo: AuthSessionInfo = {},
   ): Promise<AuthResponse> {
-    const userExists = await this.authRepo.checkUserExists(
+    const userExists = await this.authRepo.getUserWithUsernameOrEmail(
       request.username,
       request.email,
     );
@@ -69,10 +69,10 @@ export class AuthService implements IAuthService {
     const hashedPassword = await hashUtils.hash(request.password, 10);
     const hashedRequest = {
       ...request,
-      password: hashedPassword
-    }
+      password: hashedPassword,
+    };
 
-    const user = await this.authRepo.registerUser(hashedRequest);
+    const user = await this.authRepo.createUser(hashedRequest);
     if (!user) {
       throw ERRORS.AUTH.REGISTRATION_FAILED();
     }

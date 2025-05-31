@@ -21,11 +21,14 @@ export interface AuthDTO {
 // ====================
 // Response Types
 // ====================
-export type AuthUserResponse = Pick<AuthDTO, 'username' | 'email' | 'createdAt' | 'uuid' >
+export type AuthUserResponse = Pick<
+  AuthDTO,
+  'username' | 'email' | 'createdAt' | 'uuid'
+>;
 export interface AuthResponse {
   token: string;
   refreshToken: string;
-  user: AuthUserResponse
+  user: AuthUserResponse;
 }
 
 // ====================

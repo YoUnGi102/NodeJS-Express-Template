@@ -1,12 +1,7 @@
-import { UserSessionDTO } from '../session.types';
+import { UserSessionDTO, UserSessionRequest } from '../session.types';
 
 export interface ISessionRepository {
-  createSession(
-    userUUID: string,
-    refreshToken: string,
-    ipAddress?: string,
-    userAgent?: string,
-  ): Promise<UserSessionDTO>;
+  createSession(sessionRequest: UserSessionRequest): Promise<UserSessionDTO>;
   findByToken(refreshToken: string): Promise<UserSessionDTO | null>;
   revokeSession(refreshToken: string): Promise<void>;
   revokeAllForUser(userUUID: string): Promise<void>;

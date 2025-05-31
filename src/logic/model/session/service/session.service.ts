@@ -21,24 +21,29 @@ export class SessionService implements ISessionService {
   ): Promise<UserSessionDTO> {
     const refreshToken = signRefreshToken(userUUID);
     const hashedRefreshToken = hashUtils.sha256(refreshToken);
-    const session = await this.sessionRepo.createSession(
+
+    const session = await this.sessionRepo.createSession({
       userUUID,
-      hashedRefreshToken,
       ipAddress,
       userAgent,
-    );
+      refreshToken: hashedRefreshToken
+    });
+
     return { ...session, refreshToken };
   }
   async findByToken(refreshToken: string): Promise<UserSessionDTO> {
     verifyRefreshToken(refreshToken);
 
     const hash = hashUtils.sha256(refreshToken);
+
     const session = await this.sessionRepo.findByToken(hash);
     if (!session) {
       throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
     }
+
     return session;
   }
+
   async revokeAllForUser(userUUID: string): Promise<void> {
     await this.sessionRepo.revokeAllForUser(userUUID);
   }
@@ -59,13 +64,14 @@ export class SessionService implements ISessionService {
     oldToken: string,
   ): Promise<string> {
     const hashedOldToken = hashUtils.sha256(oldToken);
+
     const session = await this.sessionRepo.findByToken(hashedOldToken);
     if (!session) {
       throw ERRORS.AUTH.REFRESH_TOKEN_INVALID();
     }
+
     const newToken = signRefreshToken(userUUID);
     const hashedNewToken = hashUtils.sha256(newToken);
-
     await this.sessionRepo.updateRefreshToken(hashedOldToken, hashedNewToken);
 
     return newToken;

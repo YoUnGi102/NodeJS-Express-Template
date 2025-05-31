@@ -31,7 +31,6 @@ export const postAuthRefresh = () =>
     refreshToken: Joi.string().required(),
   }).options(JOI_CONFIG.DEFAULT_OPTIONS);
 
-
 // VALIDATORS
 const POST_AUTH_REGISTER: SchemaMap = {
   body: postAuthRegister(),

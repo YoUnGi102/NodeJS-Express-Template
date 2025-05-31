@@ -13,3 +13,10 @@ export interface UserSessionDTO {
     createdAt: string;
   };
 }
+
+export interface UserSessionRequest {
+  userUUID: string;
+  refreshToken: string;
+  ipAddress?: string;
+  userAgent?: string;
+}
