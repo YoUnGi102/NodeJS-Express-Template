@@ -246,10 +246,7 @@ npm run format
 ---
 
 ## 🪪 License
-
-This project is currently unlicensed.
-
-To make it open-source, consider adding a license such as [MIT](https://choosealicense.com/licenses/mit/) or [Apache 2.0](https://choosealicense.com/licenses/apache-2.0/).
+[MIT](https://choosealicense.com/licenses/mit/).
 
 ---
 
