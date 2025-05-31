@@ -67,9 +67,12 @@ export class AuthService implements IAuthService {
     }
 
     const hashedPassword = await hashUtils.hash(request.password, 10);
-    request.password = hashedPassword;
+    const hashedRequest = {
+      ...request,
+      password: hashedPassword
+    }
 
-    const user = await this.authRepo.registerUser(request);
+    const user = await this.authRepo.registerUser(hashedRequest);
     if (!user) {
       throw ERRORS.AUTH.REGISTRATION_FAILED();
     }

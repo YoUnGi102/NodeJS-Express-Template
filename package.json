@@ -43,6 +43,7 @@
     "cors": "^2.8.5",
     "eslint": "^9.27.0",
     "express": "^5.1.0",
+    "helmet": "^8.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.10",

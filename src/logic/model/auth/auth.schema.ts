@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { JOI_CONFIG } from '@src/config';
 import { SchemaMap } from '@shared/types/validation.types';
 
-export const authPostRegister = () =>
+export const postAuthRegister = () =>
   Joi.object({
     username: Joi.string()
       .min(JOI_CONFIG.USER.MIN_USERNAME_LENGTH)
@@ -20,28 +20,29 @@ export const authPostRegister = () =>
     email: Joi.string().email().required(),
   }).options(JOI_CONFIG.DEFAULT_OPTIONS);
 
-export const authPostLogin = () =>
+export const postAuthLogin = () =>
   Joi.object({
     username: Joi.string().max(50).required(),
     password: Joi.string().max(50).required(),
   }).options(JOI_CONFIG.DEFAULT_OPTIONS);
 
-export const authPostRefresh = () =>
+export const postAuthRefresh = () =>
   Joi.object({
     refreshToken: Joi.string().required(),
   }).options(JOI_CONFIG.DEFAULT_OPTIONS);
 
+
 // VALIDATORS
 const POST_AUTH_REGISTER: SchemaMap = {
-  body: authPostRegister(),
+  body: postAuthRegister(),
 };
 
 const POST_AUTH_LOGIN: SchemaMap = {
-  body: authPostLogin(),
+  body: postAuthLogin(),
 };
 
 const POST_AUTH_REFRESH: SchemaMap = {
-  body: authPostRefresh(),
+  body: postAuthRefresh(),
 };
 
 export default { POST_AUTH_LOGIN, POST_AUTH_REGISTER, POST_AUTH_REFRESH };

@@ -1,13 +1,14 @@
 import '@goodrequest/joi-type-extract/index.d.ts';
 import Joi from 'joi';
 import {
-  authPostLogin,
-  authPostRefresh,
-  authPostRegister,
+  postAuthLogin,
+  postAuthRefresh,
+  postAuthRegister,
 } from './auth.schema';
 
-// DTO
-
+// ====================
+// Data Transfer Objects (DTOs)
+// ====================
 export interface AuthDTO {
   id: number;
   username: string;
@@ -17,31 +18,32 @@ export interface AuthDTO {
   createdAt: Date;
 }
 
-// RESPONSE TYPES
-
+// ====================
+// Response Types
+// ====================
+export type AuthUserResponse = Pick<AuthDTO, 'username' | 'email' | 'createdAt' | 'uuid' >
 export interface AuthResponse {
   token: string;
   refreshToken: string;
-  user: {
-    username: string;
-    email: string;
-    uuid: string;
-    createdAt: Date;
-  };
+  user: AuthUserResponse
 }
 
-// REQUEST TYPES - Extracted from "auth.schema.ts"
-
+// ====================
+// Request Types (from Joi)
+// ====================
 export type AuthLoginRequest = Joi.extractType<
-  ReturnType<typeof authPostLogin>
+  ReturnType<typeof postAuthLogin>
 >;
 export type AuthRegisterRequest = Joi.extractType<
-  ReturnType<typeof authPostRegister>
+  ReturnType<typeof postAuthRegister>
 >;
 export type AuthRefreshRequest = Joi.extractType<
-  ReturnType<typeof authPostRefresh>
+  ReturnType<typeof postAuthRefresh>
 >;
 
+// ====================
+// Session Info Type
+// ====================
 export interface AuthSessionInfo {
   ipAddress?: string;
   userAgent?: string;

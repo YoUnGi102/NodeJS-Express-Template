@@ -7,6 +7,7 @@ import {
   AuthLoginRequest,
   AuthRefreshRequest,
   AuthRegisterRequest,
+  AuthResponse,
   AuthSessionInfo,
 } from '../auth.types';
 
@@ -16,13 +17,10 @@ export class AuthController implements IAuthController {
     @inject(INJECTION_TOKENS.IAuthService) private authService: IAuthService,
   ) {}
 
-  async login(req: Request, res: Response, next: NextFunction) {
+  async login(req: Request, res: Response<AuthResponse>, next: NextFunction) {
     try {
       const authRequest = req.body as AuthLoginRequest;
-      const sessionInfo: AuthSessionInfo = {
-        ipAddress: req.ip,
-        userAgent: req.get('User-Agent'),
-      };
+      const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
       const auth = await this.authService.login(authRequest, sessionInfo);
       res.status(200).json(auth);
     } catch (err) {
@@ -32,15 +30,12 @@ export class AuthController implements IAuthController {
 
   async register(
     req: Request,
-    res: Response,
+    res: Response<AuthResponse>,
     next: NextFunction,
   ): Promise<void> {
     try {
       const authRequest = req.body as AuthRegisterRequest;
-      const sessionInfo: AuthSessionInfo = {
-        ipAddress: req.ip,
-        userAgent: req.get('User-Agent'),
-      };
+      const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
       const auth = await this.authService.register(authRequest, sessionInfo);
       res.status(201).json(auth);
     } catch (err) {
@@ -50,7 +45,7 @@ export class AuthController implements IAuthController {
 
   async refresh(
     req: Request,
-    res: Response,
+    res: Response<AuthResponse>,
     next: NextFunction,
   ): Promise<void> {
     try {
@@ -66,9 +61,16 @@ export class AuthController implements IAuthController {
     try {
       const { refreshToken } = req.body as AuthRefreshRequest;
       await this.authService.logout(refreshToken);
-      res.status(204).send();
+      res.status(204).json();
     } catch (err) {
       next(err);
     }
+  }
+
+  private getSessionInfo(req: Request): AuthSessionInfo {
+    return {
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent'),
+    };
   }
 }
