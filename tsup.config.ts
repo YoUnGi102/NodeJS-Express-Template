@@ -1,4 +1,7 @@
 import { defineConfig } from 'tsup';
+import { builtinModules } from 'module';
+
+console.log(JSON.stringify(builtinModules));
 
 export default defineConfig({
   entry: ['src'],
@@ -7,6 +10,10 @@ export default defineConfig({
   dts: true,
   splitting: false,
   clean: true,
+  banner: {
+    js: `import "reflect-metadata";`
+  },
+  external: ['dotenv', 'fs', 'path'],
   esbuildOptions(options) {
     options.plugins = [
       {

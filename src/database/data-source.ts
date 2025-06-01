@@ -1,9 +1,10 @@
 import 'reflect-metadata';
-import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import { User, UserSession } from '@database/entities';
 
-dotenv.config();
+if (typeof process.env.DB_PASS !== 'string') {
+  throw new Error('DB_PASS must be a string');
+}
 
 const AppDataSource = new DataSource({
   type: 'postgres',
