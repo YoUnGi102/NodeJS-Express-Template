@@ -11,7 +11,7 @@ export default defineConfig({
   splitting: false,
   clean: true,
   banner: {
-    js: `import "reflect-metadata";`
+    js: `import "reflect-metadata";`,
   },
   external: ['dotenv', 'fs', 'path'],
   esbuildOptions(options) {
