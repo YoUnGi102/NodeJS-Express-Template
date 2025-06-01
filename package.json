@@ -16,9 +16,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typeorm": "node --loader ts-node/esm ./node_modules/typeorm/cli.js",
-    "migration:generate": "npm run typeorm -- migration:generate -d dist/database/data-source.js src/database/migrations/Init",
-    "migration:run": "npm run typeorm -- migration:run -d dist/database/data-source.js",
-    "migration:revert": "npm run typeorm -- migration:revert -d dist/database/data-source.js"
+    "migration:generate": "dotenv -e .env.production -- npm run typeorm -- migration:generate -d dist/database/data-source.js src/database/migrations/Init",
+    "migration:run": "dotenv -e .env.production -- npm run typeorm -- migration:run -d dist/database/data-source.js",
+    "migration:revert": "dotenv -e .env.production -- npm run typeorm -- migration:revert -d dist/database/data-source.js"
   },
   "repository": {
     "type": "git",
