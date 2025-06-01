@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     env_file:
-      - .env.production
+      - .env.docker
     image: postgres:15
     container_name: pg-database
     restart: always
@@ -20,7 +20,7 @@ services:
     ports:
       - '3000:3000'
     env_file:
-      - .env.production
+      - .env.docker
     environment:
       DB_HOST: db
 volumes:
