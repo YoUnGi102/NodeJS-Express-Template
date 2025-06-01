@@ -15,4 +15,4 @@ RUN ls -l dist
 EXPOSE 3000
 
 # Run migration then start the server
-CMD ["sh", "-c", "npx typeorm migration:run -d dist/data-source.js && node dist/server.js"]
+CMD ["sh", "-c", "npx typeorm migration:run -d dist/database/data-source.js && node dist/index.js"]

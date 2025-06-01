@@ -12,7 +12,7 @@ dotenv.config();
 logger.info(`NODE_ENV=${process.env.NODE_ENV}`);
 
 const NODE_ENV = process.env.NODE_ENV;
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT || 5000);
 
 AppDataSource.initialize()
   .then(async () => {
@@ -21,7 +21,7 @@ AppDataSource.initialize()
     container.registerInstance(DataSource, AppDataSource);
 
     const app = await createApp(AppDataSource);
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       if (NODE_ENV !== 'production') {
         logger.info(`Listening on http://localhost:${PORT}`);
       }
