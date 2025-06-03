@@ -5,10 +5,9 @@ import { IAuthService } from '../service/auth.service.interface';
 import { IAuthController } from './auth.controller.interface';
 import {
   AuthLoginRequest,
-  AuthRefreshRequest,
   AuthRegisterRequest,
-  AuthResponse,
   AuthSessionInfo,
+  AuthResponse,
 } from '../auth.types';
 
 @injectable()
@@ -21,8 +20,10 @@ export class AuthController implements IAuthController {
     try {
       const authRequest = req.body as AuthLoginRequest;
       const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
-      const auth = await this.authService.login(authRequest, sessionInfo);
-      res.status(200).json(auth);
+      const internal = await this.authService.login(authRequest, sessionInfo);
+      this.attachRefreshToken(res, internal.refreshToken);
+      const response = { token: internal.token, user: internal.user };
+      res.status(200).json(response);
     } catch (err) {
       next(err);
     }
@@ -36,8 +37,13 @@ export class AuthController implements IAuthController {
     try {
       const authRequest = req.body as AuthRegisterRequest;
       const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
-      const auth = await this.authService.register(authRequest, sessionInfo);
-      res.status(201).json(auth);
+      const internal = await this.authService.register(
+        authRequest,
+        sessionInfo,
+      );
+      this.attachRefreshToken(res, internal.refreshToken);
+      const response = { token: internal.token, user: internal.user };
+      res.status(201).json(response);
     } catch (err) {
       next(err);
     }
@@ -49,9 +55,11 @@ export class AuthController implements IAuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { refreshToken } = req.body as AuthRefreshRequest;
-      const auth = await this.authService.refreshAccessToken(refreshToken);
-      res.status(200).json(auth);
+      const refreshToken = req.cookies.jid;
+      const internal = await this.authService.refreshAccessToken(refreshToken);
+      this.attachRefreshToken(res, internal.refreshToken);
+      const response = { token: internal.token, user: internal.user };
+      res.status(200).json(response);
     } catch (err) {
       next(err);
     }
@@ -59,12 +67,21 @@ export class AuthController implements IAuthController {
 
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { refreshToken } = req.body as AuthRefreshRequest;
+      const refreshToken = req.cookies.jid;
       await this.authService.logout(refreshToken);
       res.status(204).json();
     } catch (err) {
       next(err);
     }
+  }
+
+  private attachRefreshToken(res: Response, token: string) {
+    res.cookie('jid', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+    });
   }
 
   private getSessionInfo(req: Request): AuthSessionInfo {

@@ -25,9 +25,12 @@ export type AuthUserResponse = Pick<
   AuthDTO,
   'username' | 'email' | 'createdAt' | 'uuid'
 >;
+export interface InternalAuthResponse extends AuthResponse {
+  refreshToken: string;
+}
+
 export interface AuthResponse {
   token: string;
-  refreshToken: string;
   user: AuthUserResponse;
 }
 

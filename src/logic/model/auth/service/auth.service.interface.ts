@@ -1,7 +1,7 @@
 import {
   AuthLoginRequest,
   AuthRegisterRequest,
-  AuthResponse,
+  InternalAuthResponse,
   AuthSessionInfo,
 } from '../auth.types';
 
@@ -9,11 +9,11 @@ export interface IAuthService {
   login(
     auth: AuthLoginRequest,
     sessionInfo?: AuthSessionInfo,
-  ): Promise<AuthResponse>;
+  ): Promise<InternalAuthResponse>;
   register(
     auth: AuthRegisterRequest,
     sessionInfo?: AuthSessionInfo,
-  ): Promise<AuthResponse>;
-  refreshAccessToken(refreshToken: string): Promise<AuthResponse>;
+  ): Promise<InternalAuthResponse>;
+  refreshAccessToken(refreshToken: string): Promise<InternalAuthResponse>;
   logout(refreshToken: string): Promise<void>;
 }

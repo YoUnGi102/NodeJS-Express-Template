@@ -1,6 +1,6 @@
 import {
   AuthLoginRequest,
-  AuthResponse,
+  InternalAuthResponse,
   AuthRegisterRequest,
   AuthSessionInfo,
 } from '../auth.types';
@@ -25,7 +25,7 @@ export class AuthService implements IAuthService {
   async login(
     { username, password }: AuthLoginRequest,
     sessionInfo: AuthSessionInfo = {},
-  ): Promise<AuthResponse> {
+  ): Promise<InternalAuthResponse> {
     const auth = await this.authRepo.findByUsernameWithPassword(username);
     if (!auth) {
       throw ERRORS.AUTH.CREDENTIALS_INVALID();
@@ -55,7 +55,7 @@ export class AuthService implements IAuthService {
   async register(
     request: AuthRegisterRequest,
     sessionInfo: AuthSessionInfo = {},
-  ): Promise<AuthResponse> {
+  ): Promise<InternalAuthResponse> {
     const userExists = await this.authRepo.findByUsernameOrEmail(
       request.username,
       request.email,
@@ -92,7 +92,9 @@ export class AuthService implements IAuthService {
     return toAuthResponse(token, refreshToken, user);
   }
 
-  async refreshAccessToken(refreshToken: string): Promise<AuthResponse> {
+  async refreshAccessToken(
+    refreshToken: string,
+  ): Promise<InternalAuthResponse> {
     const session = await this.sessionService.findByToken(refreshToken);
 
     const user = await this.authRepo.findByUUID(session.user.uuid);

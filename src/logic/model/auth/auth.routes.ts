@@ -178,17 +178,6 @@ router.post(
  *   post:
  *     summary: Refresh JWT token
  *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - refreshToken
- *             properties:
- *               refreshToken:
- *                 type: string
  *     responses:
  *       200:
  *         description: Tokens refreshed successfully
@@ -198,8 +187,6 @@ router.post(
  *               type: object
  *               properties:
  *                 token:
- *                   type: string
- *                 refreshToken:
  *                   type: string
  *                 user:
  *                   type: object
@@ -230,13 +217,7 @@ router.post(
  *                 message:
  *                   type: string
  */
-
-router.post(
-  '/refresh',
-  validate(VALIDATOR.POST_AUTH_REFRESH),
-  loggingMiddleware,
-  authController.refresh,
-);
+router.post('/refresh', loggingMiddleware, authController.refresh);
 
 /**
  * @swagger
@@ -244,17 +225,6 @@ router.post(
  *   post:
  *     summary: Log out a user (invalidate session)
  *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - refreshToken
- *             properties:
- *               refreshToken:
- *                 type: string
  *     responses:
  *       204:
  *         description: Logged out successfully. No content returned.
@@ -273,11 +243,6 @@ router.post(
  *                 message:
  *                   type: string
  */
-router.post(
-  '/logout',
-  validate(VALIDATOR.POST_AUTH_REFRESH),
-  loggingMiddleware,
-  authController.logout,
-);
+router.post('/logout', loggingMiddleware, authController.logout);
 
 export default router;

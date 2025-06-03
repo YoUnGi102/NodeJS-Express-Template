@@ -3,6 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from '@src/config/swagger.config';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import express, { Express, Router } from 'express';
 import cors from 'cors';
 import { DataSource } from 'typeorm';
@@ -46,6 +47,8 @@ const registerRoutes = async (): Promise<Router> => {
 export const createApp = async (dataSource: DataSource): Promise<Express> => {
   const app = express();
 
+  app.use(cookieParser());
+
   // Sets secure HTTP headers using Helmet
   app.use(helmet());
 
@@ -68,6 +71,7 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
     swaggerUi.setup(swaggerSpec, {
       swaggerOptions: {
         withCredentials: true,
+        
       },
     }),
   );

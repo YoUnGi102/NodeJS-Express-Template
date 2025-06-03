@@ -40,6 +40,7 @@
     "@goodrequest/joi-type-extract": "^0.0.4",
     "bcryptjs": "^3.0.2",
     "class-transformer": "^0.5.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "eslint": "^9.27.0",
     "express": "^5.1.0",
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",

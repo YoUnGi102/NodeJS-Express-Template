@@ -1,10 +1,10 @@
-import { AuthDTO, AuthResponse } from '../auth.types';
+import { AuthDTO, InternalAuthResponse } from '../auth.types';
 
 export const toAuthResponse = (
   token: string,
   refreshToken: string,
   auth: AuthDTO,
-): AuthResponse => ({
+): InternalAuthResponse => ({
   token,
   refreshToken,
   user: {
