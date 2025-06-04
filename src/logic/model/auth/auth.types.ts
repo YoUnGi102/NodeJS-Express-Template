@@ -1,10 +1,9 @@
-import "@goodrequest/joi-type-extract/index.d.ts";
-import Joi from "joi";
 import {
 	postAuthLogin,
 	postAuthRefresh,
 	postAuthRegister,
 } from "./auth.schema";
+import z from "zod";
 
 // ====================
 // Data Transfer Objects (DTOs)
@@ -32,17 +31,12 @@ export interface AuthResponse {
 }
 
 // ====================
-// Request Types (from Joi)
+// Request Types (from Zod)
 // ====================
-export type AuthLoginRequest = Joi.extractType<
-	ReturnType<typeof postAuthLogin>
->;
-export type AuthRegisterRequest = Joi.extractType<
-	ReturnType<typeof postAuthRegister>
->;
-export type AuthRefreshRequest = Joi.extractType<
-	ReturnType<typeof postAuthRefresh>
->;
+
+export type AuthRegisterRequest = z.infer<ReturnType<typeof postAuthRegister>>;
+export type AuthLoginRequest = z.infer<ReturnType<typeof postAuthLogin>>;
+export type AuthRefreshRequest = z.infer<ReturnType<typeof postAuthRefresh>>;
 
 // ====================
 // Session Info Type

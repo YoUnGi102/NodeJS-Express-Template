@@ -18,20 +18,14 @@ export class AuthController implements IAuthController {
 		res.status(200).json(auth);
 	}
 
-	async register(
-		req: Request,
-		res: Response<AuthResponse>,
-	): Promise<void> {
+	async register(req: Request, res: Response<AuthResponse>): Promise<void> {
 		const authRequest = req.body;
 		const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
 		const auth = await this.authService.register(authRequest, sessionInfo);
 		res.status(201).json(auth);
 	}
 
-	async refresh(
-		req: Request,
-		res: Response<AuthResponse>,
-	): Promise<void> {
+	async refresh(req: Request, res: Response<AuthResponse>): Promise<void> {
 		const { refreshToken } = req.body;
 		const auth = await this.authService.refreshAccessToken(refreshToken);
 		res.status(200).json(auth);
@@ -50,4 +44,3 @@ export class AuthController implements IAuthController {
 		};
 	}
 }
- 

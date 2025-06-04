@@ -9,21 +9,20 @@ const validate = (schemas: SchemaMap) => {
 			const schema = schemas[part];
 			if (!schema) continue;
 
-			const { error, value } = schema.validate(req[part], {
-				abortEarly: false,
-				stripUnknown: true,
-				convert: true,
-			});
+			const parseResult = schema.strip().safeParse(req[part]);
 
-			if (error) {
+			if (!parseResult.success) {
+				const messages = parseResult.error.errors.map(
+					(err) => `${err.path.join(".")} - ${err.message}`,
+				);
 				res.status(400).json({
 					title: "BAD_REQUEST",
-					message: error.details.map((d) => d.message),
+					message: messages,
 				});
 				return;
 			}
 
-			result[part] = value;
+			result[part] = parseResult.data;
 		}
 
 		if (result.query)
