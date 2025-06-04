@@ -1,5 +1,5 @@
 import { INJECTION_TOKENS } from "@src/config";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import { AuthResponse, AuthSessionInfo } from "../auth.types";
 import { IAuthService } from "../service/auth.service.interface";
@@ -50,3 +50,4 @@ export class AuthController implements IAuthController {
 		};
 	}
 }
+ 
