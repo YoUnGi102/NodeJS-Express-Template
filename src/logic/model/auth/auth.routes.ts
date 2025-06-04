@@ -1,14 +1,14 @@
-import { container } from 'tsyringe';
-import { Router } from 'express';
-import { IAuthController } from './controller/auth.controller.interface';
-import { INJECTION_TOKENS } from '@src/config';
-import { bindAll } from '@src/logic/shared/utils/bindAllMethods';
-import validate from '@logic/shared/middleware/validation.middleware';
-import VALIDATOR from '@logic/model/auth/auth.schema';
-import { loggingMiddleware } from '@src/logic/shared/middleware/logging.middleware';
+import { container } from "tsyringe";
+import { Router } from "express";
+import { IAuthController } from "./controller/auth.controller.interface";
+import { INJECTION_TOKENS } from "@src/config";
+import { bindAll } from "@src/logic/shared/utils/bindAllMethods";
+import validate from "@logic/shared/middleware/validation.middleware";
+import VALIDATOR from "@logic/model/auth/auth.schema";
+import { loggingMiddleware } from "@src/logic/shared/middleware/logging.middleware";
 
 const rawController = container.resolve<IAuthController>(
-  INJECTION_TOKENS.IAuthController,
+	INJECTION_TOKENS.IAuthController,
 );
 const authController = bindAll(rawController);
 const router = Router();
@@ -77,10 +77,10 @@ const router = Router();
  */
 
 router.post(
-  '/login',
-  validate(VALIDATOR.POST_AUTH_LOGIN),
-  loggingMiddleware,
-  authController.login,
+	"/login",
+	validate(VALIDATOR.POST_AUTH_LOGIN),
+	loggingMiddleware,
+	authController.login,
 );
 
 /**
@@ -166,10 +166,10 @@ router.post(
  */
 
 router.post(
-  '/register',
-  validate(VALIDATOR.POST_AUTH_REGISTER),
-  loggingMiddleware,
-  authController.register,
+	"/register",
+	validate(VALIDATOR.POST_AUTH_REGISTER),
+	loggingMiddleware,
+	authController.register,
 );
 
 /**
@@ -232,10 +232,10 @@ router.post(
  */
 
 router.post(
-  '/refresh',
-  validate(VALIDATOR.POST_AUTH_REFRESH),
-  loggingMiddleware,
-  authController.refresh,
+	"/refresh",
+	validate(VALIDATOR.POST_AUTH_REFRESH),
+	loggingMiddleware,
+	authController.refresh,
 );
 
 /**
@@ -274,10 +274,10 @@ router.post(
  *                   type: string
  */
 router.post(
-  '/logout',
-  validate(VALIDATOR.POST_AUTH_REFRESH),
-  loggingMiddleware,
-  authController.logout,
+	"/logout",
+	validate(VALIDATOR.POST_AUTH_REFRESH),
+	loggingMiddleware,
+	authController.logout,
 );
 
 export default router;
