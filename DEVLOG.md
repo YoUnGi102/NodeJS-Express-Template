@@ -25,15 +25,15 @@ This document tracks key things I've learned while building this project, focusi
 ## 🧰 Middleware
 
 - Implemented middleware for:
-  - Input validation with **Joi**,
+  - Input validation with **Zod**,
   - Logging and structured error handling,
   - Authentication via access tokens using Express middleware.
 
 ---
 
-## 📦 Validation with Joi
+## 📦 Validation with Zod
 
-- Created schemas using Joi and extracted request types from them using `joi-type-extract`.
+- Created schemas using Zod and extracted request types from them.
 - Centralized validation logic and reused it across routes.
 
 ---

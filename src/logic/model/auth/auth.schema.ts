@@ -1,37 +1,40 @@
 import { SchemaMap } from "@shared/types/validation.types";
-import { JOI_CONFIG } from "@src/config";
-import Joi from "joi";
+import { ZOD_CONFIG } from "@src/config";
+import { z } from "zod";
+
+// ===============
+// Schema Creators
+// ===============
 
 export const postAuthRegister = () =>
-	Joi.object({
-		username: Joi.string()
-			.min(JOI_CONFIG.USER.MIN_USERNAME_LENGTH)
+	z.object({
+		username: z.string().min(ZOD_CONFIG.USER.MIN_USERNAME_LENGTH).max(50),
+		password: z
+			.string()
+			.min(ZOD_CONFIG.USER.MIN_PASSWORD_LENGTH)
 			.max(50)
-			.required(),
-		password: Joi.string()
-			.min(JOI_CONFIG.USER.MIN_PASSWORD_LENGTH)
-			.max(50)
-			.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/)
-			.required()
-			.messages({
-				"string.pattern.base":
+			.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
+				message:
 					"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
 			}),
-		email: Joi.string().email().required(),
-	}).options(JOI_CONFIG.DEFAULT_OPTIONS);
+		email: z.string().email(),
+	});
 
 export const postAuthLogin = () =>
-	Joi.object({
-		username: Joi.string().max(50).required(),
-		password: Joi.string().max(50).required(),
-	}).options(JOI_CONFIG.DEFAULT_OPTIONS);
+	z.object({
+		username: z.string().max(50),
+		password: z.string().max(50),
+	});
 
 export const postAuthRefresh = () =>
-	Joi.object({
-		refreshToken: Joi.string().required(),
-	}).options(JOI_CONFIG.DEFAULT_OPTIONS);
+	z.object({
+		refreshToken: z.string(),
+	});
 
-// VALIDATORS
+// ==========
+// Validators
+// ==========
+
 const POST_AUTH_REGISTER: SchemaMap = {
 	body: postAuthRegister(),
 };
@@ -44,4 +47,8 @@ const POST_AUTH_REFRESH: SchemaMap = {
 	body: postAuthRefresh(),
 };
 
-export default { POST_AUTH_LOGIN, POST_AUTH_REGISTER, POST_AUTH_REFRESH };
+export default {
+	POST_AUTH_LOGIN,
+	POST_AUTH_REGISTER,
+	POST_AUTH_REFRESH,
+};
