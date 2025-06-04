@@ -5,7 +5,7 @@
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
-		"dev": "dotenv -e .env.development -- nodemon src/index.ts",
+		"dev": "dotenv -e .env.development -- tsx watch src/index.ts",
 		"start": "dotenv -e .env.production -- node dist/index.js",
 		"build": "tsup",
 		"commit:check": "npm run format && npm run lint && npm run test && npm run build",
@@ -24,7 +24,12 @@
 		"type": "git",
 		"url": "git+https://github.com/YoUnGi102/NodeJS-Express-Template.git"
 	},
-	"keywords": ["node.js", "typescript", "express", "template"],
+	"keywords": [
+		"node.js",
+		"typescript",
+		"express",
+		"template"
+	],
 	"author": "YoUnGi102 (Tomáš Greš)",
 	"license": "MIT",
 	"bugs": {
@@ -40,7 +45,6 @@
 		"helmet": "^8.1.0",
 		"joi": "^17.13.3",
 		"jsonwebtoken": "^9.0.2",
-		"nodemon": "^3.1.10",
 		"pg": "^8.16.0",
 		"reflect-metadata": "^0.2.2",
 		"swagger-jsdoc": "^6.2.8",
