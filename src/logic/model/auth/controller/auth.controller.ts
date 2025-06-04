@@ -2,9 +2,6 @@ import { INJECTION_TOKENS } from "@src/config";
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import {
-	AuthLoginRequest,
-	AuthRefreshRequest,
-	AuthRegisterRequest,
 	AuthResponse,
 	AuthSessionInfo,
 } from "../auth.types";
