@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { DataSource } from "typeorm";
 import { User, UserSession } from "@database/entities";
+import { DataSource } from "typeorm";
 
 if (typeof process.env.DB_PASS !== "string") {
 	throw new Error("DB_PASS must be a string");

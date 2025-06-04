@@ -1,10 +1,10 @@
 import {
 	CreateDateColumn,
-	UpdateDateColumn,
 	DeleteDateColumn,
-	VersionColumn,
 	ManyToOne,
 	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+	VersionColumn,
 } from "typeorm";
 import { User } from "./User";
 

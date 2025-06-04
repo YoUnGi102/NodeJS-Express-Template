@@ -1,14 +1,14 @@
-import { Express } from "express";
-import { setupApp } from "../setup";
-import { container } from "tsyringe";
 import { INJECTION_TOKENS } from "@src/config";
-import { IAuthRepository } from "@src/logic/model/auth/repository/auth.repository.interface";
-import { createTestUser, createTestUserRequest } from "@test/utils/factories";
 import {
 	AuthDTO,
 	AuthRegisterRequest,
 	AuthResponse,
 } from "@src/logic/model/auth/auth.types";
+import { IAuthRepository } from "@src/logic/model/auth/repository/auth.repository.interface";
+import { createTestUser, createTestUserRequest } from "@test/utils/factories";
+import { Express } from "express";
+import { container } from "tsyringe";
+import { setupApp } from "../setup";
 
 let authRepository: IAuthRepository;
 let app: Express;

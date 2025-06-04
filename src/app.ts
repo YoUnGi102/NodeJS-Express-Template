@@ -1,12 +1,12 @@
 import "reflect-metadata";
-import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "@src/config/swagger.config";
-import dotenv from "dotenv";
-import helmet from "helmet";
-import express, { Express, Router } from "express";
-import cors from "cors";
-import { DataSource } from "typeorm";
 import { errorMiddleware } from "@src/logic/shared/middleware/error.middleware";
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { Express, Router } from "express";
+import helmet from "helmet";
+import swaggerUi from "swagger-ui-express";
+import { DataSource } from "typeorm";
 
 dotenv.config();
 

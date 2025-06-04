@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
-import { v4 as uuidv4 } from "uuid";
 import { JWTPayload } from "@src/logic/shared/types/auth.types";
 import { ERRORS } from "@src/logic/shared/utils/errors";
+import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 
 const signRefreshToken = (userUUID: string) => {
 	const refreshToken = jwt.sign(

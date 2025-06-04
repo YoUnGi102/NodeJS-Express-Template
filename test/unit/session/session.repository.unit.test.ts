@@ -1,14 +1,14 @@
-import { Express } from "express";
+import { INJECTION_TOKENS } from "@src/config";
+import { AuthResponse } from "@src/logic/model/auth/auth.types";
 import { ISessionRepository } from "@src/logic/model/session/repository/session.repository.interface";
+import { UserSessionRequest } from "@src/logic/model/session/session.types";
+import { Express } from "express";
+import { container } from "tsyringe";
 import {
 	createTestSessionForUser,
 	createTestUser,
 } from "../../utils/factories";
 import { setupApp } from "../setup";
-import { AuthResponse } from "@src/logic/model/auth/auth.types";
-import { UserSessionRequest } from "@src/logic/model/session/session.types";
-import { container } from "tsyringe";
-import { INJECTION_TOKENS } from "@src/config";
 
 let sessionRepo: ISessionRepository;
 let app: Express;

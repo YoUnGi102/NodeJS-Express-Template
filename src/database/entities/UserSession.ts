@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 import { AuditableEntity } from "./AuditableEntity";
 import { User } from "./User";
 

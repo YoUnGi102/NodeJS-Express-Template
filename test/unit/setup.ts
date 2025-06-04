@@ -1,10 +1,10 @@
 import "reflect-metadata";
 import "@config/container";
+import { createApp } from "@src/app";
 import { Express } from "express";
+import { container } from "tsyringe";
 import { DataSource } from "typeorm";
 import { createTestDataSource } from "../global-setup";
-import { container } from "tsyringe";
-import { createApp } from "@src/app";
 
 export const setupApp = async (): Promise<Express> => {
 	const testDataSource = createTestDataSource();

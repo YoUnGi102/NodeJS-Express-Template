@@ -21,7 +21,7 @@ export const authMiddleware = async (
 		}
 
 		const payload = authTokenUtils.verifyAccessToken(token);
-		req.auth = payload;
+		   req.auth = payload;
 		next();
 	} catch (error) {
 		if (error instanceof jwt.TokenExpiredError) {

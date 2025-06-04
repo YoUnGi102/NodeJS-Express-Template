@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import logger from "../utils/logger";
 
 const SLOW_REQUEST_THRESHOLD_MS = Number.parseInt(

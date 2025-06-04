@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import "@config/container";
-import { createApp } from "./app";
-import dotenv from "dotenv";
 import logger from "@src/logic/shared/utils/logger";
-import AppDataSource from "./database/data-source";
+import dotenv from "dotenv";
 import { container } from "tsyringe";
 import { DataSource } from "typeorm";
+import { createApp } from "./app";
+import AppDataSource from "./database/data-source";
 
 dotenv.config();
 

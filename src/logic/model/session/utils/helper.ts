@@ -1,9 +1,9 @@
 import { UserSession } from "@src/database/entities/UserSession";
-import { UserSessionDTO } from "../session.types";
-import jwt from "jsonwebtoken";
-import { v4 as uuidv4 } from "uuid";
 import { JWTPayload } from "@src/logic/shared/types/auth.types";
 import { ERRORS } from "@src/logic/shared/utils/errors";
+import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
+import { UserSessionDTO } from "../session.types";
 
 export const signRefreshToken = (userUUID: string) => {
 	const refreshToken = jwt.sign(

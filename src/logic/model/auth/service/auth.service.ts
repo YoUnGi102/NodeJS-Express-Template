@@ -1,18 +1,18 @@
+import { INJECTION_TOKENS } from "@src/config";
+import { ERRORS } from "@src/logic/shared/utils/errors";
+import hashUtils from "@src/logic/shared/utils/hashUtils";
+import { inject, injectable } from "tsyringe";
+import { ISessionService } from "../../session/service/session.service.interface";
 import {
 	AuthLoginRequest,
-	AuthResponse,
 	AuthRegisterRequest,
+	AuthResponse,
 	AuthSessionInfo,
 } from "../auth.types";
-import { ERRORS } from "@src/logic/shared/utils/errors";
-import { inject, injectable } from "tsyringe";
-import { IAuthService } from "./auth.service.interface";
-import { toAuthResponse } from "../utils/helpers";
-import authTokenUtils from "../utils/authUtils";
-import hashUtils from "@src/logic/shared/utils/hashUtils";
-import { INJECTION_TOKENS } from "@src/config";
 import { IAuthRepository } from "../repository/auth.repository.interface";
-import { ISessionService } from "../../session/service/session.service.interface";
+import authTokenUtils from "../utils/authUtils";
+import { toAuthResponse } from "../utils/helpers";
+import { IAuthService } from "./auth.service.interface";
 
 @injectable()
 export class AuthService implements IAuthService {

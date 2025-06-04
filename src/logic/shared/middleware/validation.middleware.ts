@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { RequestPart, SchemaMap } from "../types/validation.types";
 
 const validate = (schemas: SchemaMap) => {

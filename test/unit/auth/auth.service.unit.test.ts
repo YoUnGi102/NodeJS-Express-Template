@@ -1,17 +1,17 @@
-import { Express } from "express";
-import {
-	createTestUser,
-	createTestUserRequest,
-	TEST_PASSWORD,
-} from "../../utils/factories";
-import { ERRORS } from "@src/logic/shared/utils/errors";
-import { setupApp } from "../setup";
-import { container } from "tsyringe";
-import { IAuthService } from "@src/logic/model/auth/service/auth.service.interface";
 import { INJECTION_TOKENS } from "@src/config";
 import { AuthLoginRequest } from "@src/logic/model/auth/auth.types";
-import hashUtils from "@src/logic/shared/utils/hashUtils";
+import { IAuthService } from "@src/logic/model/auth/service/auth.service.interface";
 import { ISessionRepository } from "@src/logic/model/session/repository/session.repository.interface";
+import { ERRORS } from "@src/logic/shared/utils/errors";
+import hashUtils from "@src/logic/shared/utils/hashUtils";
+import { Express } from "express";
+import { container } from "tsyringe";
+import {
+	TEST_PASSWORD,
+	createTestUser,
+	createTestUserRequest,
+} from "../../utils/factories";
+import { setupApp } from "../setup";
 
 let authService: IAuthService;
 let sessionRepo: ISessionRepository;

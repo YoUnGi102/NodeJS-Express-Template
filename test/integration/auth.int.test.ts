@@ -1,17 +1,17 @@
-import request from "supertest";
-import { Express } from "express";
 import { AuthRegisterRequest, AuthResponse } from "@model/auth/auth.types";
-import { MESSAGES } from "@src/logic/shared/utils/errors/errorMessages";
 import { User, UserSession } from "@src/database/entities";
-import { setupIntegration } from "./setup";
+import authTokenUtils from "@src/logic/model/auth/utils/authUtils";
+import { MESSAGES } from "@src/logic/shared/utils/errors/errorMessages";
+import hashUtils from "@src/logic/shared/utils/hashUtils";
+import { Express } from "express";
+import request from "supertest";
+import { Repository } from "typeorm";
 import {
+	TEST_PASSWORD,
 	createTestUser,
 	createTestUserRequest,
-	TEST_PASSWORD,
 } from "../utils/factories";
-import authTokenUtils from "@src/logic/model/auth/utils/authUtils";
-import { Repository } from "typeorm";
-import hashUtils from "@src/logic/shared/utils/hashUtils";
+import { setupIntegration } from "./setup";
 
 let app: Express;
 let userRepo: Repository<User>;

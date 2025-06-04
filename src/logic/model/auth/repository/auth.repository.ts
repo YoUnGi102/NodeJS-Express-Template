@@ -1,3 +1,5 @@
+import { User } from "@src/database/entities";
+import { inject, injectable } from "tsyringe";
 import {
 	DataSource,
 	FindOptionsSelect,
@@ -5,9 +7,7 @@ import {
 	IsNull,
 } from "typeorm";
 import { AuthDTO, AuthRegisterRequest } from "../auth.types";
-import { User } from "@src/database/entities";
 import { toAuthDTO } from "./auth.mapper";
-import { inject, injectable } from "tsyringe";
 import { IAuthRepository } from "./auth.repository.interface";
 
 const USER_ACTIVE_CONDITION = {

@@ -1,12 +1,12 @@
+import authUtils from "@src/logic/model/auth/utils/authUtils";
+import { ISessionRepository } from "@src/logic/model/session/repository/session.repository.interface";
 import { Express } from "express";
+import request from "supertest";
 import {
 	AuthRegisterRequest,
 	AuthResponse,
 	AuthSessionInfo,
 } from "../../src/logic/model/auth/auth.types";
-import request from "supertest";
-import authUtils from "@src/logic/model/auth/utils/authUtils";
-import { ISessionRepository } from "@src/logic/model/session/repository/session.repository.interface";
 
 export const TEST_PASSWORD = "Test123.+";
 

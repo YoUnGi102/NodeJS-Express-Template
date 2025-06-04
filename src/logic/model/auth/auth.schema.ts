@@ -1,6 +1,6 @@
-import Joi from "joi";
-import { JOI_CONFIG } from "@src/config";
 import { SchemaMap } from "@shared/types/validation.types";
+import { JOI_CONFIG } from "@src/config";
+import Joi from "joi";
 
 export const postAuthRegister = () =>
 	Joi.object({

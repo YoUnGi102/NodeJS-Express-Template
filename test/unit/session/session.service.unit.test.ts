@@ -1,11 +1,11 @@
-import { Express } from "express";
-import { ISessionService } from "@src/logic/model/session/service/session.service.interface";
-import { setupApp } from "../setup";
-import { container } from "tsyringe";
 import { INJECTION_TOKENS } from "@src/config";
-import { createTestUser } from "@test/utils/factories";
-import hashUtils from "@src/logic/shared/utils/hashUtils";
 import { ISessionRepository } from "@src/logic/model/session/repository/session.repository.interface";
+import { ISessionService } from "@src/logic/model/session/service/session.service.interface";
+import hashUtils from "@src/logic/shared/utils/hashUtils";
+import { createTestUser } from "@test/utils/factories";
+import { Express } from "express";
+import { container } from "tsyringe";
+import { setupApp } from "../setup";
 
 let sessionService: ISessionService;
 let sessionRepo: ISessionRepository;

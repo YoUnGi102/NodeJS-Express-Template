@@ -1,11 +1,11 @@
-import { container } from "tsyringe";
-import { Router } from "express";
-import { IAuthController } from "./controller/auth.controller.interface";
-import { INJECTION_TOKENS } from "@src/config";
-import { bindAll } from "@src/logic/shared/utils/bindAllMethods";
-import validate from "@logic/shared/middleware/validation.middleware";
 import VALIDATOR from "@logic/model/auth/auth.schema";
+import validate from "@logic/shared/middleware/validation.middleware";
+import { INJECTION_TOKENS } from "@src/config";
 import { loggingMiddleware } from "@src/logic/shared/middleware/logging.middleware";
+import { bindAll } from "@src/logic/shared/utils/bindAllMethods";
+import { Router } from "express";
+import { container } from "tsyringe";
+import { IAuthController } from "./controller/auth.controller.interface";
 
 const rawController = container.resolve<IAuthController>(
 	INJECTION_TOKENS.IAuthController,

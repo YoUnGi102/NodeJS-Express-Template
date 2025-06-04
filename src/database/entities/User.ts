@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { AuditableEntityUUID } from "./AuditableEntityUUID";
 import { UserSession } from "./UserSession";
 

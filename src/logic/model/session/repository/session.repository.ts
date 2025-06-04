@@ -1,3 +1,4 @@
+import { User } from "@src/database/entities";
 import { UserSession } from "@src/database/entities/UserSession";
 import { inject, injectable } from "tsyringe";
 import {
@@ -6,10 +7,9 @@ import {
 	FindOptionsWhere,
 	IsNull,
 } from "typeorm";
-import { ISessionRepository } from "./session.repository.interface";
 import { UserSessionDTO, UserSessionRequest } from "../session.types";
-import { User } from "@src/database/entities";
 import { toUserSessionDTO } from "../utils/helper";
+import { ISessionRepository } from "./session.repository.interface";
 
 const USER_RELATION = {
 	user: true,
