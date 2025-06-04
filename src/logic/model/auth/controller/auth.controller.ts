@@ -2,9 +2,6 @@ import { INJECTION_TOKENS } from "@src/config";
 import { NextFunction, Request, Response } from "express";
 import { inject, injectable } from "tsyringe";
 import {
-	AuthLoginRequest,
-	AuthRefreshRequest,
-	AuthRegisterRequest,
 	AuthResponse,
 	AuthSessionInfo,
 } from "../auth.types";
@@ -19,7 +16,7 @@ export class AuthController implements IAuthController {
 
 	async login(req: Request, res: Response<AuthResponse>, next: NextFunction) {
 		try {
-			const authRequest = req.body as AuthLoginRequest;
+			const authRequest = req.body;
 			const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
 			const auth = await this.authService.login(authRequest, sessionInfo);
 			res.status(200).json(auth);
@@ -34,7 +31,7 @@ export class AuthController implements IAuthController {
 		next: NextFunction,
 	): Promise<void> {
 		try {
-			const authRequest = req.body as AuthRegisterRequest;
+			const authRequest = req.body;
 			const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
 			const auth = await this.authService.register(authRequest, sessionInfo);
 			res.status(201).json(auth);
@@ -49,7 +46,7 @@ export class AuthController implements IAuthController {
 		next: NextFunction,
 	): Promise<void> {
 		try {
-			const { refreshToken } = req.body as AuthRefreshRequest;
+			const { refreshToken } = req.body;
 			const auth = await this.authService.refreshAccessToken(refreshToken);
 			res.status(200).json(auth);
 		} catch (err) {
@@ -59,7 +56,7 @@ export class AuthController implements IAuthController {
 
 	async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { refreshToken } = req.body as AuthRefreshRequest;
+			const { refreshToken } = req.body;
 			await this.authService.logout(refreshToken);
 			res.status(204).json();
 		} catch (err) {
