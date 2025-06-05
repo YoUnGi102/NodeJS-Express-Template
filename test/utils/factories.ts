@@ -36,7 +36,7 @@ export const createTestUser = async (
 	const users = [];
 	for (let i = 0; i < count; i++) {
 		const user = createTestUserRequest(userOverrides);
-		const res = await request(app).post("/api/auth/register").send(user);
+		const res = await request(app).post('/auth/register').send(user);
 
 		if (res.status !== 201) {
 			throw new Error(

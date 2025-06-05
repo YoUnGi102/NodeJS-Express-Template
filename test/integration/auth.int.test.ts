@@ -24,9 +24,9 @@ beforeAll(async () => {
 	sessionRepo = config.testDataSource.getRepository(UserSession);
 });
 
-afterAll(async () => {});
+afterAll(async () => { });
 
-const BASE_URL = "/api/auth";
+const BASE_URL = "/auth";
 describe("POST /auth/register", () => {
 	const AUTH_REGISTER_URL = `${BASE_URL}/register`;
 
@@ -112,7 +112,7 @@ describe("POST /auth/register", () => {
 
 			// Act
 			const res = await request(app)
-				.post("/api/auth/register")
+				.post(AUTH_REGISTER_URL)
 				.send(requestBody);
 
 			// Assert

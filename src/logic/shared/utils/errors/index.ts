@@ -1,7 +1,7 @@
-import { APIError, ErrorMessage } from "./APIError";
+import { APIError, StatusMessage } from "./APIError";
 import { MESSAGES } from "./errorMessages";
 
-const throwError = (errorData: ErrorMessage): APIError =>
+const throwError = (errorData: StatusMessage): APIError =>
 	new APIError(errorData.status, errorData.message, errorData.title);
 
 export const ERRORS = {

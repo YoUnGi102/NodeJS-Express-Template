@@ -37,6 +37,7 @@
 	},
 	"homepage": "https://github.com/YoUnGi102/NodeJS-Express-Template#readme",
 	"dependencies": {
+		"@asteasolutions/zod-to-openapi": "^7.3.2",
 		"bcryptjs": "^3.0.2",
 		"cors": "^2.8.5",
 		"express": "^5.1.0",

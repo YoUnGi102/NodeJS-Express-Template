@@ -14,7 +14,7 @@ export const STATUS = {
 	INTERNAL_SERVER_ERROR: 500,
 };
 
-export interface Message {
+export interface ErrorMessage {
 	title: string;
 	message: string;
 	status: number;
