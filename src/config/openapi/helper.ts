@@ -3,14 +3,18 @@ import { OpenAPIRoute } from "./routes";
 import { SchemaMap } from "@src/logic/shared/types/validation.types";
 
 export const registerRoute = (registry: OpenAPIRegistry, route: OpenAPIRoute): void => {
+    // TODO Add Response schemas
+    const successMessage = route.successResponse ? { [route.successResponse.status]: { ...route.successResponse } } : {}
+
     registry.registerPath({
         method: route.method,
         path: route.path,
         summary: route.summary,
         tags: route.tags,
-        ...getRequestConfig(route.requestSchema),
+        ...getRequestConfig(route.request),
         responses: {
-            ...route.responses.reduce((acc, res) => {
+            ...successMessage,
+            ...route.errorResponses.reduce((acc, res) => {
                 acc[res.status] = {
                     description: res.message,
                     content: {
