@@ -62,10 +62,7 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	app.use("/", await registerRoutes());
 
 	// Serve Swagger UI documentation at /api-docs
-	app.use(
-		"/docs",
-		swaggerUi.serve,
-		swaggerUi.setup(openApiDocument));
+	app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 	// Global error handling middleware
 	app.use(errorMiddleware);
