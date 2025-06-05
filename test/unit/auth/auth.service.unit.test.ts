@@ -41,7 +41,7 @@ describe("IAuthService", () => {
 
 			// Assert
 			expect(userRefreshed.refreshToken).not.toEqual(userCreated.refreshToken);
-			expect(
+			await expect(
 				authService.refreshAccessToken(userCreated.refreshToken),
 			).rejects.toThrow(ERRORS.AUTH.REFRESH_TOKEN_INVALID().message);
 		});

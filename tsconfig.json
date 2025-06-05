@@ -14,7 +14,11 @@
 		"rootDir": "src",
 		"baseUrl": ".",
 		"resolveJsonModule": true,
-		"types": ["node", "express"],
+		"types": [
+			"node",
+			"express",
+			"vitest/globals"
+		],
 		"strictNullChecks": true,
 		"plugins": [
 			{
@@ -23,16 +27,38 @@
 			}
 		],
 		"paths": {
-			"@src/*": ["src/*"],
-			"@config/*": ["src/config/*"],
-			"@logic/*": ["src/logic/*"],
-			"@model/*": ["src/logic/model/*"],
-			"@utils/*": ["src/logic/shared/utils/*"],
-			"@database/*": ["src/database/*"],
-			"@shared/*": ["src/logic/shared/*"],
-			"@test/*": ["test/*"]
+			"@src/*": [
+				"src/*"
+			],
+			"@config/*": [
+				"src/config/*"
+			],
+			"@logic/*": [
+				"src/logic/*"
+			],
+			"@model/*": [
+				"src/logic/model/*"
+			],
+			"@utils/*": [
+				"src/logic/shared/utils/*"
+			],
+			"@database/*": [
+				"src/database/*"
+			],
+			"@shared/*": [
+				"src/logic/shared/*"
+			],
+			"@test/*": [
+				"test/*"
+			]
 		}
 	},
-	"include": ["src/**/*", "src/database/migrations/**/*"],
-	"exclude": ["node_modules", "dist"]
+	"include": [
+		"src/**/*",
+		"src/database/migrations/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
 }
