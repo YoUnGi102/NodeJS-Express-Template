@@ -1,18 +1,17 @@
-import { postAuthLogin, postAuthRegister } from "@src/logic/model/auth/auth.schema";
+import { SchemaMap } from "@src/logic/shared/types/validation.types";
 import { ErrorMessage, MESSAGES } from "@src/logic/shared/utils/errors/errorMessages";
-import { ZodObject } from "zod";
+import AUTH_VALIDATOR from '@model/auth/auth.schema';
 
 export interface OpenAPIRoute {
     method: 'get' | 'post' | 'put' | 'delete' | 'patch' | 'head' | 'options' | 'trace';
     path: string;
     summary?: string;
     tags?: string[];
-    requestSchema?: ZodObject<any>;
+    requestSchema?: SchemaMap,
     responseSchema?: any,
     responses: ErrorMessage[]
 }
 
-// /AUTH/LOGIN
 export const ROUTES: Record<string, Record<string, OpenAPIRoute>> = {
     AUTH: {
         LOGIN: {
@@ -20,7 +19,7 @@ export const ROUTES: Record<string, Record<string, OpenAPIRoute>> = {
             path: '/auth/login',
             summary: 'Log in user',
             tags: ['Auth'],
-            requestSchema: postAuthLogin(),
+            requestSchema: AUTH_VALIDATOR.POST_AUTH_LOGIN,
             responses: [
                 MESSAGES.AUTH_CREDENTIALS_INVALID,
             ]
@@ -29,7 +28,7 @@ export const ROUTES: Record<string, Record<string, OpenAPIRoute>> = {
             path: '/auth/register',
             summary: 'Register user',
             tags: ['Auth'],
-            requestSchema: postAuthRegister(),
+            requestSchema: AUTH_VALIDATOR.POST_AUTH_REGISTER,
             responses: [
                 MESSAGES.USER_ALREADY_EXISTS,
                 MESSAGES.AUTH_EMAIL_EXISTS,
