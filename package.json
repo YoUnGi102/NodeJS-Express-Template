@@ -22,12 +22,7 @@
 		"type": "git",
 		"url": "git+https://github.com/YoUnGi102/NodeJS-Express-Template.git"
 	},
-	"keywords": [
-		"node.js",
-		"typescript",
-		"express",
-		"template"
-	],
+	"keywords": ["node.js", "typescript", "express", "template"],
 	"author": "YoUnGi102 (Tomáš Greš)",
 	"license": "MIT",
 	"bugs": {
@@ -52,24 +47,19 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@types/bcrypt": "^5.0.2",
 		"@types/cors": "^2.8.18",
 		"@types/express": "^5.0.2",
-		"@types/jest": "^29.5.14",
 		"@types/jsonwebtoken": "^9.0.9",
 		"@types/node": "^22.15.18",
 		"@types/supertest": "^6.0.3",
 		"@types/swagger-jsdoc": "^6.0.4",
 		"@types/swagger-ui-express": "^4.1.8",
 		"@types/uuid": "^10.0.0",
-		"cross-env": "^7.0.3",
 		"depcheck": "^1.4.7",
 		"dotenv": "^16.5.0",
 		"dotenv-cli": "^8.0.0",
-		"jest-environment-node": "^29.7.0",
 		"sqlite3": "^5.1.7",
 		"supertest": "^7.1.1",
-		"ts-jest": "^29.3.4",
 		"ts-node": "^10.9.2",
 		"tsconfig-paths": "^4.2.0",
 		"tsup": "^8.5.0",
