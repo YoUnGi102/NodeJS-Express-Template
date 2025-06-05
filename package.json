@@ -78,6 +78,8 @@
 		"tsup": "^8.5.0",
 		"tsx": "^4.19.4",
 		"typescript": "^5.8.3",
-		"typescript-transform-paths": "^3.5.5"
+		"typescript-transform-paths": "^3.5.5",
+		"vite-tsconfig-paths": "^5.1.4",
+		"vitest": "^3.2.1"
 	}
 }

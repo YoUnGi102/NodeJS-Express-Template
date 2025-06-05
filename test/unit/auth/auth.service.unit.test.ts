@@ -25,7 +25,7 @@ beforeAll(async () => {
 	);
 });
 
-afterAll(async () => {});
+afterAll(async () => { });
 
 describe("IAuthService", () => {
 	describe("generateRefreshToken", () => {
@@ -41,8 +41,7 @@ describe("IAuthService", () => {
 
 			// Assert
 			expect(userRefreshed.refreshToken).not.toEqual(userCreated.refreshToken);
-			expect(
-				authService.refreshAccessToken(userCreated.refreshToken),
+			await expect(authService.refreshAccessToken(userCreated.refreshToken),
 			).rejects.toThrow(ERRORS.AUTH.REFRESH_TOKEN_INVALID().message);
 		});
 
