@@ -1,6 +1,6 @@
 # 🧩 Node.js / Express / TypeScript Template
 
-A fully featured, production-ready Node.js / Express.js boilerplate using TypeScript. Includes multi-session user authentication with JWT, PostgreSQL integration via TypeORM, and full test coverage with Jest and Supertest.
+A fully featured, production-ready Node.js / Express.js boilerplate using TypeScript. Includes multi-session user authentication with JWT, PostgreSQL integration via TypeORM, and full test coverage with Vitest and Supertest.
 
 ---
 
@@ -14,8 +14,8 @@ A fully featured, production-ready Node.js / Express.js boilerplate using TypeSc
 - ✅ Dependency injection with `tsyringe`
 - ✅ Environment-based configuration
 - ✅ Swagger API documentation
-- ✅ Biome linter and formatter
-- ✅ Unit & integration tests with Jest + Supertest
+- ✅ ESLint + Prettier setup
+- ✅ Unit & integration tests with Vitest + Supertest
 - ✅ Centralized logging with Winston
 
 ---
@@ -26,7 +26,7 @@ A fully featured, production-ready Node.js / Express.js boilerplate using TypeSc
 - **Runtime**: Node.js + Express
 - **Database**: PostgreSQL + TypeORM
 - **Auth**: JWT (access & refresh tokens)
-- **Testing**: Jest, Supertest
+- **Testing**: Vitest, Supertest
 - **DI**: tsyringe
 - **Docs**: Swagger
 - **Logging**: Winston
@@ -90,15 +90,13 @@ Update `.env` with your database credentials and secrets.
 
 | Script                       | Description                                            |
 | ---------------------------- | ------------------------------------------------------ |
-| `npm run dev`                | Start development server with hot reload via `nodemon` |
+| `npm run dev`                | Start development server with hot reload via `tsx`     |
 | `npm run start`              | Start the production server using compiled JS          |
 | `npm run build`              | Compile TypeScript using `tsup`                        |
 | `npm run ci`                 | Clean install, format check, lint, and run unit tests  |
 | `npm run test`               | Run both integration and unit tests                    |
-| `npm run test:unit`          | Run unit tests only                                    |
-| `npm run test:integration`   | Run integration tests only                             |
-| `npm run lint`               | Run Biome on `src` and `test` directories             |
-| `npm run format`             | Format all files with Biome                         |
+| `npm run lint`               | Run biome linter on `src` and `test` directories       |
+| `npm run format`             | Format all files with biome formatter                  |
 | `npm run format:check`       | Check formatting without writing changes               |
 | `npm run migration:generate` | Generate new TypeORM migration file                    |
 | `npm run migration:run`      | Run pending database migrations                        |
@@ -205,17 +203,11 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 ## 🧪 Testing
 
-Tests are split into unit and integration categories using **Jest** and **Supertest**.
+Tests are split into unit and integration categories using **Vitest** and **Supertest**.
 
 ```bash
 # Run all tests
 npm run test
-
-# Unit tests only
-npm run test:unit
-
-# Integration tests only
-npm run test:integration
 ```
 
 Test utilities include `global-setup.ts`, `global-teardown.ts`, and custom test environment setup.
