@@ -1,18 +1,38 @@
-import { User } from "@src/database/entities"
+import { User } from "@src/database/entities";
 import { AuthUserResponseSchema } from "@src/logic/model/auth/auth.schema";
+import { DB_USER_MOCK } from "@test/utils/fixtures";
 
+describe("AuthSchema", () => {
+	describe("AuthDTOResponse", () => {
+		it("should return valid DTO from User entity", () => {
+			// Arrange
+			const user: Partial<User> = { ...DB_USER_MOCK };
 
-describe('AuthSchemas', () => {
-    describe('AuthDTOResponse', () => {
-        it('should return valid DTO from User entity', () => {
-            const user = new User('Test123', 'test123@example.com', 'Test123.+');
+			// Act
+			const { data, success, error } = AuthUserResponseSchema().safeParse(user);
 
-            const { data, success, error } = AuthUserResponseSchema().safeParse(user);
+			// Assert
+			expect(success).toEqual(true);
+			expect(error).toBeUndefined();
+			expect(data.email).toEqual(user.email);
+			expect(data.username).toEqual(user.username);
+			expect(data.createdAt).toEqual(user.createdAt);
+			expect(data.uuid).toEqual(user.uuid);
+		});
 
-            expect(success).toEqual(true)
-            expect(error).toBeNull()
-            expect(data.email).toEqual(user.email)
-            expect(data.username).toEqual(user.username)
-        })
-    })
-})
+		it("should return valid DTO from User entity without password", () => {
+			// Arrange
+			const user: Partial<User> = { ...DB_USER_MOCK, password: undefined };
+
+			// Act
+			const data = AuthUserResponseSchema().parse(user);
+
+			// Assert
+			expect(user.password).toBeUndefined();
+			expect(data.email).toEqual(user.email);
+			expect(data.username).toEqual(user.username);
+			expect(data.createdAt).toEqual(user.createdAt);
+			expect(data.uuid).toEqual(user.uuid);
+		});
+	});
+});

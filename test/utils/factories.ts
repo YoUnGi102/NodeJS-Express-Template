@@ -60,3 +60,18 @@ export const createTestSessionForUser = async (
 	});
 	return session;
 };
+
+export const generateMockUUID = (): string => {
+	return crypto.randomUUID();
+};
+
+export const generateMockJWT = (): string => {
+	const base64url = () =>
+		Buffer.from(Math.random().toString(36).substring(2))
+			.toString("base64")
+			.replace(/=/g, "")
+			.replace(/\+/g, "-")
+			.replace(/\//g, "_");
+
+	return `${base64url()}.${base64url()}.${base64url()}`;
+};

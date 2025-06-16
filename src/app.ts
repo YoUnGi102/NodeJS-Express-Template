@@ -59,7 +59,7 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	app.locals.dataSource = dataSource;
 
 	// Register all routes under the /api base path
-	app.use("/", await registerRoutes());
+	app.use("/api", await registerRoutes());
 
 	// Serve Swagger UI documentation at /api-docs
 	app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));

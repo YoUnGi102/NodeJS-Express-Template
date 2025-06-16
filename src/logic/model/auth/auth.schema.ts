@@ -54,7 +54,7 @@ export const AuthDTOSchema = () =>
 		id: AUTH_SCHEMA_FIELDS.ID,
 		username: AUTH_SCHEMA_FIELDS.USERNAME,
 		email: AUTH_SCHEMA_FIELDS.EMAIL,
-		password: AUTH_SCHEMA_FIELDS.PASSWORD,
+		password: AUTH_SCHEMA_FIELDS.PASSWORD.optional(),
 		uuid: AUTH_SCHEMA_FIELDS.UUID,
 		createdAt: AUTH_SCHEMA_FIELDS.CREATED_AT,
 	});

@@ -1,6 +1,7 @@
 import { OpenAPIRegistry, RouteConfig } from "@asteasolutions/zod-to-openapi";
 import { OpenAPIRoute } from "./routes";
 import { SchemaMap } from "@src/logic/shared/types/validation.types";
+import { ErrorMessage } from "@src/logic/shared/utils/errors/errorMessages";
 
 export const registerRoute = (
 	registry: OpenAPIRegistry,
@@ -8,7 +9,7 @@ export const registerRoute = (
 ): void => {
 	// TODO Add Response schemas
 	const successMessage = route.successResponse
-		? { [route.successResponse.status]: { ...route.successResponse } }
+		? { [route.successResponse.status]: { ...route.successResponse.schema } }
 		: {};
 
 	registry.registerPath({
@@ -18,35 +19,8 @@ export const registerRoute = (
 		tags: route.tags,
 		...getRequestConfig(route.request),
 		responses: {
+			...getErrorResponses(route.errorResponses),
 			...successMessage,
-			...route.errorResponses.reduce(
-				(acc, res) => {
-					acc[res.status] = {
-						description: res.message,
-						content: {
-							"application/json": {
-								schema: {
-									type: "object",
-									properties: {
-										status: { type: "integer", example: res.status },
-										title: {
-											type: "string",
-											example: res.title,
-										},
-										message: {
-											type: "string",
-											example: res.message,
-										},
-									},
-									required: ["status", "title", "message"],
-								},
-							},
-						},
-					};
-					return acc;
-				},
-				{} as NonNullable<RouteConfig["responses"]>,
-			),
 		},
 	});
 };
@@ -67,17 +41,48 @@ const getRequestConfig = (schemaMap?: SchemaMap) => {
 		};
 	}
 
-	// if (schemaMap.query) {
-	//     request.query = {
-	//         schema: schemaMap.query,
-	//     };
-	// }
+	if (schemaMap.query) {
+		request.query = schemaMap.query;
+	}
 
-	// if (schemaMap.params) {
-	//     request.params = {
-	//         schema: schemaMap.params,
-	//     };
-	// }
+	if (schemaMap.params) {
+		request.params = schemaMap.params;
+	}
 
 	return { request };
+};
+
+const getErrorResponses = (
+	errorResponses: ErrorMessage[],
+): NonNullable<RouteConfig["responses"]> => {
+	const resposnes = errorResponses.reduce(
+		(acc, res) => {
+			acc[res.status] = {
+				description: res.message,
+				content: {
+					"application/json": {
+						schema: {
+							type: "object",
+							properties: {
+								status: { type: "integer", example: res.status },
+								title: {
+									type: "string",
+									example: res.title,
+								},
+								message: {
+									type: "string",
+									example: res.message,
+								},
+							},
+							required: ["status", "title", "message"],
+						},
+					},
+				},
+			};
+			return acc;
+		},
+		{} as NonNullable<RouteConfig["responses"]>,
+	);
+
+	return resposnes;
 };

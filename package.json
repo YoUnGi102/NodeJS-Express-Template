@@ -22,12 +22,7 @@
 		"type": "git",
 		"url": "git+https://github.com/YoUnGi102/NodeJS-Express-Template.git"
 	},
-	"keywords": [
-		"node.js",
-		"typescript",
-		"express",
-		"template"
-	],
+	"keywords": ["node.js", "typescript", "express", "template"],
 	"author": "YoUnGi102 (Tomáš Greš)",
 	"license": "MIT",
 	"bugs": {
