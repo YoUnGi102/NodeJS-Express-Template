@@ -6,10 +6,7 @@ import { container } from "tsyringe";
 import { DataSource } from "typeorm";
 import { createApp } from "./app";
 import AppDataSource from "./database/data-source";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import z from "zod";
 
-extendZodWithOpenApi(z);
 dotenv.config();
 
 logger.info(`NODE_ENV=${process.env.NODE_ENV}`);
@@ -22,7 +19,6 @@ AppDataSource.initialize()
 		logger.info("DB initialized");
 
 		container.registerInstance(DataSource, AppDataSource);
-
 		const app = await createApp(AppDataSource);
 		app.listen(PORT, "0.0.0.0", () => {
 			if (NODE_ENV !== "production") {

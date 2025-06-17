@@ -1,28 +1,31 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { registerRoute } from "@src/config/openapi/helper";
-import { ROUTES } from "./routes";
 import {
-	AuthResponseSchema,
-	AuthUserResponseSchema,
-	AuthRegisterRequestSchema,
-	AuthLoginRequestSchema,
-	AuthRefreshRequestSchema,
-} from "@src/logic/model/auth/auth.schema";
+	AUTH_OPENAPI_ROUTES,
+	AUTH_OPENAPI_SCHEMAS,
+} from "@src/logic/model/auth/auth.openapi";
 
 const registry = new OpenAPIRegistry();
+
+// Schemas defined in [feature].schema.ts
+const schemas = {
+	...AUTH_OPENAPI_SCHEMAS,
+};
+
+// Routes defined in [feature].routes.ts
+const routes = {
+	AUTH: AUTH_OPENAPI_ROUTES,
+};
 
 // ====================
 // OpenAPI Registration
 // ====================
 
-registry.register("AuthResponse", AuthResponseSchema());
-registry.register("AuthUserResponse", AuthUserResponseSchema());
+Object.entries(schemas).forEach(([key, schema]) => {
+	registry.register(key, schema.openapi(key));
+});
 
-registry.register("AuthRegisterRequest", AuthRegisterRequestSchema());
-registry.register("AuthLoginRequestSchema", AuthLoginRequestSchema());
-registry.register("AuthRefreshRequest", AuthRefreshRequestSchema());
-
-Object.values(ROUTES).forEach((group) => {
+Object.values(routes).forEach((group) => {
 	Object.values(group).forEach((route) => {
 		registerRoute(registry, route);
 	});

@@ -5,6 +5,8 @@ export const SWAGGER_CONFIG = {
 };
 
 export const INJECTION_TOKENS = {
+	DataSource: "DataSource",
+
 	IAuthController: "AuthController",
 	IAuthService: "IAuthService",
 	IAuthRepository: "IAuthRepository",

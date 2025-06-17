@@ -23,20 +23,14 @@ const AUTH_SCHEMA_FIELDS = {
 		.uuid()
 		.openapi({ example: "2e696b5f-63f7-4ac6-b815-7f7c9888aa56" }),
 	CREATED_AT: z.date().openapi({ example: "2025-03-19T08:47:58.398Z" }),
-	REFRESH_TOKEN: z
-		.string()
-		.regex(ZOD_CONFIG.REGEX.JWT)
-		.openapi({
-			example:
-				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
-		}),
-	ACCESS_TOKEN: z
-		.string()
-		.regex(ZOD_CONFIG.REGEX.JWT)
-		.openapi({
-			example:
-				"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
-		}),
+	REFRESH_TOKEN: z.string().regex(ZOD_CONFIG.REGEX.JWT).openapi({
+		example:
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
+	}),
+	ACCESS_TOKEN: z.string().regex(ZOD_CONFIG.REGEX.JWT).openapi({
+		example:
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
+	}),
 };
 
 // ===============
@@ -44,67 +38,55 @@ const AUTH_SCHEMA_FIELDS = {
 // ===============
 
 export const AuthRegisterRequestSchema = () =>
-	z
-		.object({
-			username: AUTH_SCHEMA_FIELDS.USERNAME,
-			password: AUTH_SCHEMA_FIELDS.PASSWORD,
-			email: AUTH_SCHEMA_FIELDS.EMAIL,
-		})
-		.openapi("AuthRegisterRequest");
+	z.object({
+		username: AUTH_SCHEMA_FIELDS.USERNAME,
+		password: AUTH_SCHEMA_FIELDS.PASSWORD,
+		email: AUTH_SCHEMA_FIELDS.EMAIL,
+	});
 
 export const AuthLoginRequestSchema = () =>
-	z
-		.object({
-			username: AUTH_SCHEMA_FIELDS.USERNAME,
-			password: AUTH_SCHEMA_FIELDS.PASSWORD,
-		})
-		.openapi("AuthLoginRequest");
+	z.object({
+		username: AUTH_SCHEMA_FIELDS.USERNAME,
+		password: AUTH_SCHEMA_FIELDS.PASSWORD,
+	});
 
 export const AuthRefreshRequestSchema = () =>
-	z
-		.object({
-			refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
-		})
-		.openapi("AuthRefreshSchema");
+	z.object({
+		refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
+	});
 
 // ==========
 // DTO Schema
 // ==========
 
 export const AuthDTOSchema = () =>
-	z
-		.object({
-			id: AUTH_SCHEMA_FIELDS.ID,
-			username: AUTH_SCHEMA_FIELDS.USERNAME,
-			email: AUTH_SCHEMA_FIELDS.EMAIL,
-			password: AUTH_SCHEMA_FIELDS.PASSWORD.optional(),
-			uuid: AUTH_SCHEMA_FIELDS.UUID,
-			createdAt: AUTH_SCHEMA_FIELDS.CREATED_AT,
-		})
-		.openapi("AuthDTO");
+	z.object({
+		id: AUTH_SCHEMA_FIELDS.ID,
+		username: AUTH_SCHEMA_FIELDS.USERNAME,
+		email: AUTH_SCHEMA_FIELDS.EMAIL,
+		password: AUTH_SCHEMA_FIELDS.PASSWORD.optional(),
+		uuid: AUTH_SCHEMA_FIELDS.UUID,
+		createdAt: AUTH_SCHEMA_FIELDS.CREATED_AT,
+	});
 
 // ================
 // Response Schemas
 // ================
 
 export const AuthUserResponseSchema = () =>
-	AuthDTOSchema()
-		.pick({
-			username: true,
-			email: true,
-			uuid: true,
-			createdAt: true,
-		})
-		.openapi("AuthUserResponse");
+	AuthDTOSchema().pick({
+		username: true,
+		email: true,
+		uuid: true,
+		createdAt: true,
+	});
 
 export const AuthResponseSchema = () =>
-	z
-		.object({
-			refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
-			token: AUTH_SCHEMA_FIELDS.ACCESS_TOKEN,
-			user: AuthUserResponseSchema(),
-		})
-		.openapi("AuthResponse");
+	z.object({
+		refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
+		token: AUTH_SCHEMA_FIELDS.ACCESS_TOKEN,
+		user: AuthUserResponseSchema(),
+	});
 
 // ==========
 // Validators

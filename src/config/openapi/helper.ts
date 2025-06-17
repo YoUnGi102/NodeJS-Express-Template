@@ -1,31 +1,58 @@
 import { OpenAPIRegistry, RouteConfig } from "@asteasolutions/zod-to-openapi";
-import { OpenAPIRoute } from "./routes";
 import { SchemaMap } from "@src/logic/shared/types/validation.types";
 import { ErrorMessage } from "@src/logic/shared/utils/errors/errorMessages";
+import { ZodTypeAny } from "zod";
+
+export interface OpenAPIRoute {
+	method:
+		| "get"
+		| "post"
+		| "put"
+		| "delete"
+		| "patch"
+		| "head"
+		| "options"
+		| "trace";
+	path: string;
+	summary?: string;
+	tags?: string[];
+	request?: SchemaMap;
+	successResponse?: { status: number; schema: ZodTypeAny };
+	errorResponses: ErrorMessage[];
+}
 
 export const registerRoute = (
 	registry: OpenAPIRegistry,
 	route: OpenAPIRoute,
 ): void => {
-	// TODO Add Response schemas
-	const successMessage = route.successResponse
+	const {
+		method,
+		path,
+		summary,
+		tags,
+		request,
+		errorResponses: errors,
+		successResponse: success,
+	} = route;
+
+	const successMessage = success
 		? {
-				[route.successResponse.status]: {
+				[success.status]: {
 					content: {
-						"application/json": { schema: route.successResponse.schema },
+						"application/json": { schema: success.schema },
 					},
 				},
 			}
 		: {};
 
 	registry.registerPath({
-		method: route.method,
-		path: route.path,
-		summary: route.summary,
-		tags: route.tags,
-		...getRequestConfig(route.request),
+		method: method,
+		path: path,
+		summary: summary,
+		tags: tags,
+		...getRequestConfig(request),
 		responses: {
-			...getErrorResponses(route.errorResponses),
+			...getErrorResponses(errors),
 			...successMessage,
 		},
 	});
