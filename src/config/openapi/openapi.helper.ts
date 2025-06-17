@@ -38,10 +38,12 @@ export const registerRoute = (
 	const successMessage = success
 		? {
 				[success.status]: {
-					description: success.schema ? '' : 'No Content',
-					content: success.schema ? {
-						"application/json": { schema: success.schema },
-					} : undefined,
+					description: success.schema ? "" : "No Content",
+					content: success.schema
+						? {
+								"application/json": { schema: success.schema },
+							}
+						: undefined,
 				},
 			}
 		: {};

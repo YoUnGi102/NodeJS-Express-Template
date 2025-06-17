@@ -14,7 +14,7 @@ const schemas = {
 
 // Routes defined in [feature].routes.ts
 const routes = {
-	AUTH: AUTH_OPENAPI_ROUTES,
+	...AUTH_OPENAPI_ROUTES,
 };
 
 // ====================
@@ -25,10 +25,8 @@ Object.entries(schemas).forEach(([key, schema]) => {
 	registry.register(key, schema.openapi(key));
 });
 
-Object.values(routes).forEach((group) => {
-	Object.values(group).forEach((route) => {
-		registerRoute(registry, route);
-	});
+Object.values(routes).forEach((route) => {
+	registerRoute(registry, route);
 });
 
 export default registry;

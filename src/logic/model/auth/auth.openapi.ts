@@ -3,7 +3,7 @@ import {
 	AuthLoginRequestSchema,
 	AuthRefreshRequestSchema,
 	AuthRegisterRequestSchema,
-	AuthResponseSchema
+	AuthResponseSchema,
 } from "./auth.schema";
 import VALIDATOR from "./auth.schema";
 import { OpenAPIRoute } from "@src/config/openapi/openapi.helper";
@@ -59,7 +59,7 @@ export const AUTH_OPENAPI_ROUTES: Record<string, OpenAPIRoute> = {
 		path: "/auth/refresh",
 		summary: "Refresh access token",
 		tags: ["Auth"],
-        request: VALIDATOR.POST_AUTH_REFRESH,
+		request: VALIDATOR.POST_AUTH_REFRESH,
 		errorResponses: [
 			MESSAGES.AUTH_TOKEN_NOT_PROVIDED,
 			MESSAGES.AUTH_REFRESH_TOKEN_EXPIRED,
@@ -75,7 +75,7 @@ export const AUTH_OPENAPI_ROUTES: Record<string, OpenAPIRoute> = {
 		path: "/auth/logout",
 		summary: "Log out user",
 		tags: ["Auth"],
-        request: VALIDATOR.POST_AUTH_REFRESH,
+		request: VALIDATOR.POST_AUTH_REFRESH,
 		errorResponses: [
 			MESSAGES.AUTH_CREDENTIALS_INVALID,
 			MESSAGES.AUTH_REFRESH_TOKEN_INVALID,
