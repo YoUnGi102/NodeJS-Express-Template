@@ -3,21 +3,11 @@ import { ISessionRepository } from "@src/logic/model/session/repository/session.
 import { Express } from "express";
 import request from "supertest";
 import {
-<<<<<<< HEAD
-  AuthRegisterRequest,
-  AuthSessionInfo,
-  InternalAuthResponse,
-} from '../../src/logic/model/auth/auth.types';
-import request from 'supertest';
-import authUtils from '@src/logic/model/auth/utils/authUtils';
-import { ISessionRepository } from '@src/logic/model/session/repository/session.repository.interface';
-import { extractCookie } from './helpers';
-=======
 	AuthRegisterRequest,
-	AuthResponse,
 	AuthSessionInfo,
+	InternalAuthResponse,
 } from "../../src/logic/model/auth/auth.types";
->>>>>>> origin/main
+import { extractCookie } from "./helpers";
 
 export const TEST_PASSWORD = "Test123.+";
 
@@ -40,43 +30,24 @@ export const createTestUserRequest = (
 };
 
 export const createTestUser = async (
-<<<<<<< HEAD
-  app: Express,
-  userOverrides: Partial<AuthRegisterRequest> = {},
-  count: number = 1,
-): Promise<InternalAuthResponse[]> => {
-  const users = [];
-  for (let i = 0; i < count; i++) {
-    const user = createTestUserRequest(userOverrides);
-    const res = await request(app).post('/api/auth/register').send(user);
-
-    const refreshToken = extractCookie(res, 'jid');
-
-    if (res.status !== 201) {
-      throw new Error(
-        `Failed to create user: ${res.status} ${JSON.stringify(res.body)}`,
-      );
-    }
-    users.push({ ...res.body, refreshToken });
-  }
-=======
 	app: Express,
 	userOverrides: Partial<AuthRegisterRequest> = {},
 	count = 1,
-): Promise<AuthResponse[]> => {
+): Promise<InternalAuthResponse[]> => {
 	const users = [];
 	for (let i = 0; i < count; i++) {
 		const user = createTestUserRequest(userOverrides);
 		const res = await request(app).post("/auth/register").send(user);
+
+		const refreshToken = extractCookie(res, "jid");
 
 		if (res.status !== 201) {
 			throw new Error(
 				`Failed to create user: ${res.status} ${JSON.stringify(res.body)}`,
 			);
 		}
-		users.push(res.body);
+		users.push({ ...res.body, refreshToken });
 	}
->>>>>>> origin/main
 
 	return users;
 };

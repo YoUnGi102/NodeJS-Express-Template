@@ -11,5 +11,6 @@ export const setupApp = async (): Promise<Express> => {
 	await testDataSource.initialize();
 	container.registerInstance(DataSource, testDataSource);
 	const app = await createApp(container.resolve(DataSource));
+	app.set("trust proxy", true);
 	return app;
 };

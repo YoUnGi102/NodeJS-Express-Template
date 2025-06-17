@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import 'reflect-metadata';
-import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from '@src/config/swagger.config';
-import dotenv from 'dotenv';
-import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
-import express, { Express, Router } from 'express';
-import cors from 'cors';
-import { DataSource } from 'typeorm';
-import { errorMiddleware } from '@src/logic/shared/middleware/error.middleware';
-=======
 import "reflect-metadata";
 import { errorMiddleware } from "@src/logic/shared/middleware/error.middleware";
 import cors from "cors";
@@ -19,7 +7,7 @@ import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import { DataSource } from "typeorm";
 import { openApiDocument } from "./config/openapi";
->>>>>>> origin/main
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -59,15 +47,10 @@ const registerRoutes = async (): Promise<Router> => {
 export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	const app = express();
 
-<<<<<<< HEAD
-  app.use(cookieParser());
+	app.use(cookieParser());
 
-  // Sets secure HTTP headers using Helmet
-  app.use(helmet());
-=======
 	// Sets secure HTTP headers using Helmet
 	app.use(helmet());
->>>>>>> origin/main
 
 	// Enables CORS for frontend and local development
 	app.use(cors(corsOptions));
@@ -81,22 +64,8 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	// Register all routes under the /api base path
 	app.use("/", await registerRoutes());
 
-<<<<<<< HEAD
-  // Serve Swagger UI documentation at /api-docs
-  app.use(
-    '/api-docs',
-    swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec, {
-      swaggerOptions: {
-        withCredentials: true,
-        
-      },
-    }),
-  );
-=======
 	// Serve Swagger UI documentation at /api-docs
 	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
->>>>>>> origin/main
 
 	// Global error handling middleware
 	app.use(errorMiddleware);
