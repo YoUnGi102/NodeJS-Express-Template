@@ -100,7 +100,6 @@ const getErrorResponses = (
 						schema: {
 							type: "object",
 							properties: {
-								status: { type: "integer", example: res.status },
 								title: {
 									type: "string",
 									example: res.title,
@@ -110,7 +109,7 @@ const getErrorResponses = (
 									example: res.message,
 								},
 							},
-							required: ["status", "title", "message"],
+							required: ["title", "message"],
 						},
 					},
 				},
