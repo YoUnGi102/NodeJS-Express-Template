@@ -1,3 +1,6 @@
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import z from "zod";
+
 const ZOD_CONFIG = {
 	CUSTOM_FUNCTIONS: {
 		round: (decimals: number) => (value: number) =>
@@ -20,3 +23,6 @@ const ZOD_CONFIG = {
 };
 
 export default ZOD_CONFIG;
+
+extendZodWithOpenApi(z);
+export { z };

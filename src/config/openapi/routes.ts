@@ -5,7 +5,7 @@ import {
 	STATUS,
 } from "@src/logic/shared/utils/errors/errorMessages";
 import AUTH_VALIDATOR, { AuthResponseSchema } from "@model/auth/auth.schema";
-import z, { ZodObject, ZodTypeAny } from "zod";
+import { ZodTypeAny } from "zod";
 
 export interface OpenAPIRoute {
 	method:
@@ -21,7 +21,7 @@ export interface OpenAPIRoute {
 	summary?: string;
 	tags?: string[];
 	request?: SchemaMap;
-	successResponse?: { status: number; schema: ZodObject<Record<string, ZodTypeAny>>; };
+	successResponse?: { status: number; schema: ZodTypeAny };
 	errorResponses: ErrorMessage[];
 }
 
@@ -36,8 +36,8 @@ export const ROUTES: Record<string, Record<string, OpenAPIRoute>> = {
 			errorResponses: [MESSAGES.AUTH_CREDENTIALS_INVALID],
 			successResponse: {
 				status: STATUS.OK,
-				schema: AuthResponseSchema()
-			}
+				schema: AuthResponseSchema(),
+			},
 		},
 		REGISTER: {
 			method: "post",
@@ -53,8 +53,8 @@ export const ROUTES: Record<string, Record<string, OpenAPIRoute>> = {
 			],
 			successResponse: {
 				status: STATUS.CREATED,
-				schema: AuthResponseSchema()
-			}
+				schema: AuthResponseSchema(),
+			},
 		},
 		LOGOUT: {
 			method: "post",
@@ -67,8 +67,8 @@ export const ROUTES: Record<string, Record<string, OpenAPIRoute>> = {
 			],
 			successResponse: {
 				status: STATUS.OK,
-				schema: z.object({})
-			}
+				schema: AuthResponseSchema(),
+			},
 		},
 		REFRESH: {
 			method: "post",
@@ -82,8 +82,8 @@ export const ROUTES: Record<string, Record<string, OpenAPIRoute>> = {
 			],
 			successResponse: {
 				status: STATUS.OK,
-				schema: AuthResponseSchema()
-			}
+				schema: AuthResponseSchema(),
+			},
 		},
 	},
 };

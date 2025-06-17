@@ -6,7 +6,10 @@ import { container } from "tsyringe";
 import { DataSource } from "typeorm";
 import { createApp } from "./app";
 import AppDataSource from "./database/data-source";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import z from "zod";
 
+extendZodWithOpenApi(z);
 dotenv.config();
 
 logger.info(`NODE_ENV=${process.env.NODE_ENV}`);

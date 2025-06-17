@@ -1,6 +1,6 @@
 import {
 	AuthLoginRequestSchema,
-	AuthRefreshSchema,
+	AuthRefreshRequestSchema,
 	AuthRegisterRequestSchema,
 	AuthUserResponseSchema,
 	AuthResponseSchema,
@@ -32,7 +32,9 @@ export type AuthRegisterRequest = z.infer<
 export type AuthLoginRequest = z.infer<
 	ReturnType<typeof AuthLoginRequestSchema>
 >;
-export type AuthRefreshRequest = z.infer<ReturnType<typeof AuthRefreshSchema>>;
+export type AuthRefreshRequest = z.infer<
+	ReturnType<typeof AuthRefreshRequestSchema>
+>;
 
 // ====================
 // Session Info Type

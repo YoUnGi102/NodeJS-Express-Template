@@ -47,7 +47,7 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	const app = express();
 
 	// Sets secure HTTP headers using Helmet
-	app.use(helmet());
+	app.use(helmet({ contentSecurityPolicy: false }));
 
 	// Enables CORS for frontend and local development
 	app.use(cors(corsOptions));
@@ -59,10 +59,10 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	app.locals.dataSource = dataSource;
 
 	// Register all routes under the /api base path
-	app.use("/api", await registerRoutes());
+	app.use("/", await registerRoutes());
 
 	// Serve Swagger UI documentation at /api-docs
-	app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
+	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 	// Global error handling middleware
 	app.use(errorMiddleware);

@@ -9,7 +9,13 @@ export const registerRoute = (
 ): void => {
 	// TODO Add Response schemas
 	const successMessage = route.successResponse
-		? { [route.successResponse.status]: { ...route.successResponse.schema } }
+		? {
+				[route.successResponse.status]: {
+					content: {
+						"application/json": { schema: route.successResponse.schema },
+					},
+				},
+			}
 		: {};
 
 	registry.registerPath({
