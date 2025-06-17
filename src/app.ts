@@ -47,7 +47,7 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	const app = express();
 
 	// Sets secure HTTP headers using Helmet
-	app.use(helmet({ contentSecurityPolicy: false }));
+	app.use(helmet());
 
 	// Enables CORS for frontend and local development
 	app.use(cors(corsOptions));
