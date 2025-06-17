@@ -1,5 +1,5 @@
 import { OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
-import registry from "./registry";
+import registry from "./openapi.registry";
 import { SWAGGER_CONFIG } from "..";
 
 const generator = new OpenApiGeneratorV3(registry.definitions);

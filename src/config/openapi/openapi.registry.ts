@@ -1,5 +1,5 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { registerRoute } from "@src/config/openapi/helper";
+import { registerRoute } from "@src/config/openapi/openapi.helper";
 import {
 	AUTH_OPENAPI_ROUTES,
 	AUTH_OPENAPI_SCHEMAS,

@@ -2,6 +2,7 @@ export const STATUS = {
 	// SUCCESS
 	CREATED: 201,
 	OK: 200,
+	NO_CONTENT: 204,
 
 	// CLIENT ERROR
 	NOT_FOUND: 404,

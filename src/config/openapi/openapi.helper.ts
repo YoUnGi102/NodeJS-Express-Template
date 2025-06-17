@@ -17,7 +17,7 @@ export interface OpenAPIRoute {
 	summary?: string;
 	tags?: string[];
 	request?: SchemaMap;
-	successResponse?: { status: number; schema: ZodTypeAny };
+	successResponse?: { status: number; schema?: ZodTypeAny };
 	errorResponses: ErrorMessage[];
 }
 
@@ -38,9 +38,10 @@ export const registerRoute = (
 	const successMessage = success
 		? {
 				[success.status]: {
-					content: {
+					description: success.schema ? '' : 'No Content',
+					content: success.schema ? {
 						"application/json": { schema: success.schema },
-					},
+					} : undefined,
 				},
 			}
 		: {};
