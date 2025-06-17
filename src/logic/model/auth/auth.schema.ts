@@ -25,11 +25,11 @@ const AUTH_SCHEMA_FIELDS = {
 	CREATED_AT: z.date().openapi({ example: "2025-03-19T08:47:58.398Z" }),
 	REFRESH_TOKEN: z.string().regex(ZOD_CONFIG.REGEX.JWT).openapi({
 		example:
-			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzE4NDA0MzY4fQ.zLOUGmMTU5E7D9Dk8CeHkq1bfp4XcmQtKRT-bZznZwA",
 	}),
 	ACCESS_TOKEN: z.string().regex(ZOD_CONFIG.REGEX.JWT).openapi({
 		example:
-			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzE4NDA0MzY4fQ.zLOUGmMTU5E7D9Dk8CeHkq1bfp4XcmQtKRT-bZznZwA",
 	}),
 };
 
@@ -52,7 +52,7 @@ export const AuthLoginRequestSchema = () =>
 
 export const AuthRefreshRequestSchema = () =>
 	z.object({
-		refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
+		jid: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
 	});
 
 // ==========
@@ -101,11 +101,16 @@ const POST_AUTH_LOGIN: SchemaMap = {
 };
 
 const POST_AUTH_REFRESH: SchemaMap = {
-	body: AuthRefreshRequestSchema(),
+	cookies: AuthRefreshRequestSchema(),
+};
+
+const POST_AUTH_LOGOUT: SchemaMap = {
+	cookies: AuthRefreshRequestSchema(),
 };
 
 export default {
 	POST_AUTH_LOGIN,
 	POST_AUTH_REGISTER,
 	POST_AUTH_REFRESH,
+	POST_AUTH_LOGOUT,
 };

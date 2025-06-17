@@ -4,9 +4,10 @@ import { Express } from "express";
 import request from "supertest";
 import {
 	AuthRegisterRequest,
-	AuthResponse,
 	AuthSessionInfo,
+	InternalAuthResponse,
 } from "../../src/logic/model/auth/auth.types";
+import { extractCookie } from "./helpers";
 
 export const TEST_PASSWORD = "Test123.+";
 
@@ -32,18 +33,20 @@ export const createTestUser = async (
 	app: Express,
 	userOverrides: Partial<AuthRegisterRequest> = {},
 	count = 1,
-): Promise<AuthResponse[]> => {
+): Promise<InternalAuthResponse[]> => {
 	const users = [];
 	for (let i = 0; i < count; i++) {
 		const user = createTestUserRequest(userOverrides);
 		const res = await request(app).post("/auth/register").send(user);
+
+		const refreshToken = extractCookie(res, "jid");
 
 		if (res.status !== 201) {
 			throw new Error(
 				`Failed to create user: ${res.status} ${JSON.stringify(res.body)}`,
 			);
 		}
-		users.push(res.body);
+		users.push({ ...res.body, refreshToken });
 	}
 
 	return users;

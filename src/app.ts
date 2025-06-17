@@ -7,6 +7,7 @@ import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import { DataSource } from "typeorm";
 import { openApiDocument } from "./config/openapi";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -45,6 +46,8 @@ const registerRoutes = async (): Promise<Router> => {
 // Main app factory function that initializes the Express application
 export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	const app = express();
+
+	app.use(cookieParser());
 
 	// Sets secure HTTP headers using Helmet
 	app.use(helmet());

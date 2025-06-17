@@ -1,28 +1,34 @@
 import { AuthRegisterRequest, AuthResponse } from "@model/auth/auth.types";
-import { User, UserSession } from "@src/database/entities";
 import authTokenUtils from "@src/logic/model/auth/utils/authUtils";
 import { MESSAGES } from "@src/logic/shared/utils/errors/errorMessages";
 import hashUtils from "@src/logic/shared/utils/hashUtils";
 import { Express } from "express";
 import request from "supertest";
-import { Repository } from "typeorm";
 import {
-	TEST_PASSWORD,
 	createTestUser,
 	createTestUserRequest,
-	generateMockJWT,
+	TEST_PASSWORD,
 } from "../utils/factories";
-import { setupIntegration } from "./setup";
+import { extractCookie, hasRefreshCookie } from "@test/utils/helpers";
+import { setupApp } from "@test/unit/setup";
+import { IAuthRepository } from "@src/logic/model/auth/repository/auth.repository.interface";
+import { ISessionRepository } from "@src/logic/model/session/repository/session.repository.interface";
+import { INJECTION_TOKENS } from "@src/config";
+import { container } from "tsyringe";
+import { INVALID_JWT } from "@test/utils/fixtures";
 
 let app: Express;
-let userRepo: Repository<User>;
-let sessionRepo: Repository<UserSession>;
+let authRepo: IAuthRepository;
+let sessionRepo: ISessionRepository;
 
 beforeAll(async () => {
-	const config = await setupIntegration();
-	app = config.app;
-	userRepo = config.testDataSource.getRepository(User);
-	sessionRepo = config.testDataSource.getRepository(UserSession);
+	app = await setupApp();
+	authRepo = container.resolve<IAuthRepository>(
+		INJECTION_TOKENS.IAuthRepository,
+	);
+	sessionRepo = container.resolve<ISessionRepository>(
+		INJECTION_TOKENS.ISessionRepository,
+	);
 });
 
 afterAll(async () => {});
@@ -39,13 +45,13 @@ describe("POST /auth/register", () => {
 		const res = await request(app).post(AUTH_REGISTER_URL).send(userRequest);
 
 		// Assert
-		const userInDB = await userRepo.findOneBy({ uuid: res.body.user.uuid });
+		expect(hasRefreshCookie(res)).toBe(true);
+		const userInDB = await authRepo.findByUUID(res.body.user.uuid);
 		expect(res.status).toBe(201);
 		expect(res.body).toBeDefined();
 		expect(res.body).toEqual<AuthResponse>(
 			expect.objectContaining({
 				token: expect.any(String),
-				refreshToken: expect.any(String),
 				user: expect.objectContaining({
 					uuid: expect.any(String),
 					username: userRequest.username,
@@ -138,19 +144,19 @@ describe("POST /auth/register", () => {
 		});
 	});
 
+	// TODO Move to service test?
 	it("should create a session when user registers", async () => {
 		const { user, refreshToken } = (await createTestUser(app))[0];
 
-		const session = await sessionRepo.findOne({
-			where: { refreshToken: hashUtils.sha256(refreshToken) },
-			relations: ["user"],
-		});
+		const session = await sessionRepo.findByToken(
+			hashUtils.sha256(refreshToken),
+		);
 		expect(session).toBeDefined();
 		expect(session!.user.username).toEqual(user.username);
 	});
 });
 
-describe("POST auth/login", () => {
+describe("POST /auth/login", () => {
 	const POST_AUTH_LOGIN = `${BASE_URL}/login`;
 
 	it("should log in user with correct credentials and return user info", async () => {
@@ -163,6 +169,7 @@ describe("POST auth/login", () => {
 			.send({ username: user.username, password: TEST_PASSWORD });
 
 		// Assert
+		expect(hasRefreshCookie(res)).toBe(true);
 		expect(res.status).toBe(200);
 		expect(res.body.user).toEqual(user);
 	});
@@ -179,6 +186,8 @@ describe("POST auth/login", () => {
 		const token = res.body.token;
 		const payload = authTokenUtils.verifyAccessToken(token);
 
+		// Assert
+		expect(hasRefreshCookie(res)).toBe(true);
 		expect(res.status).toBe(200);
 		expect(token).toBeDefined();
 		expect(payload).toEqual(
@@ -256,9 +265,12 @@ describe("POST auth/login", () => {
 				password: TEST_PASSWORD,
 			});
 
+		const refreshToken = extractCookie(res, "jid");
+
 		// fetch the session from DB
-		const hashedToken = hashUtils.sha256(res.body.refreshToken);
-		const session = await sessionRepo.findOneBy({ refreshToken: hashedToken });
+		const session = await sessionRepo.findByToken(
+			hashUtils.sha256(refreshToken),
+		);
 
 		expect(session!.userAgent).toBe(userAgent);
 		expect(session!.ipAddress).toBe(fakeIP);
@@ -275,13 +287,14 @@ describe("POST /auth/refresh", () => {
 		// Act
 		const res = await request(app)
 			.post(POST_AUTH_REFRESH)
-			.send({ refreshToken });
+			.set("Cookie", `jid=${refreshToken}`)
+			.send()
+			.expect(200);
 
 		// Assert
+		expect(hasRefreshCookie(res)).toEqual(true);
 		expect(res.body.token).toBeDefined();
-		expect(res.body.refreshToken).toBeDefined();
 		expect(res.body.token).not.toEqual(token);
-		expect(res.body.refreshToken).not.toEqual(refreshToken);
 	});
 
 	it("should return 401 if invalid refresh token is passed", async () => {
@@ -293,7 +306,9 @@ describe("POST /auth/refresh", () => {
 		// Act
 		const res = await request(app)
 			.post(POST_AUTH_REFRESH)
-			.send({ refreshToken });
+			.set("Cookie", `jid=${INVALID_JWT}`)
+			.send()
+			.expect(401);
 
 		// Assert
 		const { status, message, title } = MESSAGES.AUTH_REFRESH_TOKEN_INVALID;
@@ -317,11 +332,12 @@ describe("POST /auth/logout", () => {
 		// Act
 		const res = await request(app)
 			.post(POST_AUTH_LOGOUT)
-			.send({ refreshToken });
+			.set("Cookie", `jid=${refreshToken}`)
+			.send();
 
-		const session = await sessionRepo.findOneBy({
-			refreshToken: hashUtils.sha256(refreshToken),
-		});
+		const session = await sessionRepo.findByToken(
+			hashUtils.sha256(refreshToken),
+		);
 
 		// Assert
 		expect(res.status).toBe(204);
@@ -332,7 +348,7 @@ describe("POST /auth/logout", () => {
 		// Act
 		const res = await request(app)
 			.post(POST_AUTH_LOGOUT)
-			.send({ refreshToken: generateMockJWT() });
+			.set("Cookie", `jid=${INVALID_JWT}`);
 		const { message, title, status } = MESSAGES.AUTH_REFRESH_TOKEN_INVALID;
 
 		// Assert

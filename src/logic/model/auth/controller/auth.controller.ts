@@ -4,6 +4,7 @@ import { inject, injectable } from "tsyringe";
 import { AuthResponse, AuthSessionInfo } from "../auth.types";
 import { IAuthService } from "../service/auth.service.interface";
 import { IAuthController } from "./auth.controller.interface";
+import ms from "ms";
 
 @injectable()
 export class AuthController implements IAuthController {
@@ -15,25 +16,29 @@ export class AuthController implements IAuthController {
 		const authRequest = req.body;
 		const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
 		const auth = await this.authService.login(authRequest, sessionInfo);
-		res.status(200).json(auth);
+		this.addCookie(res, auth.refreshToken);
+		res.status(200).json({ token: auth.token, user: auth.user });
 	}
 
 	async register(req: Request, res: Response<AuthResponse>): Promise<void> {
 		const authRequest = req.body;
 		const sessionInfo: AuthSessionInfo = this.getSessionInfo(req);
 		const auth = await this.authService.register(authRequest, sessionInfo);
-		res.status(201).json(auth);
+		this.addCookie(res, auth.refreshToken);
+		res.status(201).json({ token: auth.token, user: auth.user });
 	}
 
 	async refresh(req: Request, res: Response<AuthResponse>): Promise<void> {
-		const { refreshToken } = req.body;
+		const refreshToken = req.cookies.jid;
 		const auth = await this.authService.refreshAccessToken(refreshToken);
-		res.status(200).json(auth);
+		this.addCookie(res, auth.refreshToken);
+		res.status(200).json({ token: auth.token, user: auth.user });
 	}
 
 	async logout(req: Request, res: Response): Promise<void> {
-		const { refreshToken } = req.body;
+		const refreshToken = req.cookies.jid;
 		await this.authService.logout(refreshToken);
+		this.clearCookie(res);
 		res.status(204).json();
 	}
 
@@ -42,5 +47,22 @@ export class AuthController implements IAuthController {
 			ipAddress: req.ip,
 			userAgent: req.get("User-Agent"),
 		};
+	}
+
+	private addCookie(res: Response, refreshToken: string): void {
+		res.cookie("jid", refreshToken, {
+			httpOnly: true,
+			sameSite: "lax",
+			secure: process.env.NODE_ENV === "production",
+			maxAge: ms("28d"),
+		});
+	}
+
+	private clearCookie(res: Response): void {
+		res.clearCookie("jid", {
+			httpOnly: true,
+			sameSite: "lax",
+			secure: process.env.NODE_ENV === "production",
+		});
 	}
 }

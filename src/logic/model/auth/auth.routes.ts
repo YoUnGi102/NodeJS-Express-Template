@@ -13,20 +13,12 @@ const rawController = container.resolve<IAuthController>(
 const authController = bindAll(rawController);
 const router = Router();
 
-// =====
-// Login
-// =====
-
 router.post(
 	"/login",
 	validate(VALIDATOR.POST_AUTH_LOGIN),
 	loggingMiddleware,
 	authController.login,
 );
-
-// ========
-// Register
-// ========
 
 router.post(
 	"/register",
@@ -35,20 +27,12 @@ router.post(
 	authController.register,
 );
 
-// =======
-// Refresh
-// =======
-
 router.post(
 	"/refresh",
 	validate(VALIDATOR.POST_AUTH_REFRESH),
 	loggingMiddleware,
 	authController.refresh,
 );
-
-// ======
-// Logout
-// ======
 
 router.post(
 	"/logout",

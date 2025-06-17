@@ -9,3 +9,6 @@ export const DB_USER_MOCK: Partial<User> = {
 	uuid: generateMockUUID(),
 	id: 1,
 };
+
+export const INVALID_JWT =
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzE4NDA0MzY4fQ.zLOUGmMTU5E7D9Dk8CeHkq1bfp4XcmQtKRT-bZznZwA";

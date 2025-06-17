@@ -10,7 +10,8 @@ const validate = (schemas: SchemaMap) => {
 			const schema = schemas[part];
 			if (!schema) continue;
 
-			const parseResult = schema.strip().safeParse(req[part]);
+			const target = req[part as keyof Request];
+			const parseResult = schema.strip().safeParse(target);
 
 			if (!parseResult.success) {
 				const messages = parseResult.error.errors.map(
@@ -26,11 +27,18 @@ const validate = (schemas: SchemaMap) => {
 			result[part] = parseResult.data;
 		}
 
-		if (result.query)
+		if (result.query) {
 			Object.defineProperty(req, "query", { value: result.query });
-		if (result.body) Object.defineProperty(req, "body", { value: result.body });
-		if (result.params)
+		}
+		if (result.body) {
+			Object.defineProperty(req, "body", { value: result.body });
+		}
+		if (result.params) {
 			Object.defineProperty(req, "params", { value: result.params });
+		}
+		if (result.cookies) {
+			Object.defineProperty(req, "cookies", { value: result.cookies });
+		}
 		next();
 	};
 };

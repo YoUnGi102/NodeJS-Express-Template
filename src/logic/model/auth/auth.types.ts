@@ -3,7 +3,6 @@ import {
 	AuthRefreshRequestSchema,
 	AuthRegisterRequestSchema,
 	AuthUserResponseSchema,
-	AuthResponseSchema,
 	AuthDTOSchema,
 } from "./auth.schema";
 import z from "zod";
@@ -20,7 +19,13 @@ export type AuthDTO = z.infer<ReturnType<typeof AuthDTOSchema>>;
 export type AuthUserResponse = z.infer<
 	ReturnType<typeof AuthUserResponseSchema>
 >;
-export type AuthResponse = z.infer<ReturnType<typeof AuthResponseSchema>>;
+export interface AuthResponse {
+	token: string;
+	user: AuthUserResponse;
+}
+export interface InternalAuthResponse extends AuthResponse {
+	refreshToken: string;
+}
 
 // ====================
 // Request Types (from Zod)
