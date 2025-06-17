@@ -30,6 +30,7 @@
 	},
 	"homepage": "https://github.com/YoUnGi102/NodeJS-Express-Template#readme",
 	"dependencies": {
+		"@asteasolutions/zod-to-openapi": "^7.3.2",
 		"bcryptjs": "^3.0.2",
 		"cors": "^2.8.5",
 		"express": "^5.1.0",
@@ -37,7 +38,6 @@
 		"jsonwebtoken": "^9.0.2",
 		"pg": "^8.16.0",
 		"reflect-metadata": "^0.2.2",
-		"swagger-jsdoc": "^6.2.8",
 		"swagger-ui-express": "^5.0.1",
 		"tsyringe": "^4.10.0",
 		"typeorm": "^0.3.24",
@@ -52,7 +52,6 @@
 		"@types/jsonwebtoken": "^9.0.9",
 		"@types/node": "^22.15.18",
 		"@types/supertest": "^6.0.3",
-		"@types/swagger-jsdoc": "^6.0.4",
 		"@types/swagger-ui-express": "^4.1.8",
 		"@types/uuid": "^10.0.0",
 		"depcheck": "^1.4.7",

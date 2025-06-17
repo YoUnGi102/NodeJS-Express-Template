@@ -19,7 +19,6 @@ AppDataSource.initialize()
 		logger.info("DB initialized");
 
 		container.registerInstance(DataSource, AppDataSource);
-
 		const app = await createApp(AppDataSource);
 		app.listen(PORT, "0.0.0.0", () => {
 			if (NODE_ENV !== "production") {

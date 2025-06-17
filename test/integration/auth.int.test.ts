@@ -10,6 +10,7 @@ import {
 	TEST_PASSWORD,
 	createTestUser,
 	createTestUserRequest,
+	generateMockJWT,
 } from "../utils/factories";
 import { setupIntegration } from "./setup";
 
@@ -26,7 +27,7 @@ beforeAll(async () => {
 
 afterAll(async () => {});
 
-const BASE_URL = "/api/auth";
+const BASE_URL = "/auth";
 describe("POST /auth/register", () => {
 	const AUTH_REGISTER_URL = `${BASE_URL}/register`;
 
@@ -67,7 +68,7 @@ describe("POST /auth/register", () => {
 		const req: AuthRegisterRequest = {
 			username: user.username,
 			email: "test@gmail.com",
-			password: "Test123.+",
+			password: TEST_PASSWORD,
 		};
 
 		// Act
@@ -84,7 +85,7 @@ describe("POST /auth/register", () => {
 		const req: AuthRegisterRequest = {
 			username: "OriginalUsername123",
 			email: user.email,
-			password: "Test123.+",
+			password: TEST_PASSWORD,
 		};
 
 		// Act
@@ -107,13 +108,11 @@ describe("POST /auth/register", () => {
 			const requestBody = {
 				username: field === "username" ? user.username : "UniqueUsername",
 				email: field === "email" ? user.email : "unique@example.com",
-				password: "Test123.+",
+				password: TEST_PASSWORD,
 			};
 
 			// Act
-			const res = await request(app)
-				.post("/api/auth/register")
-				.send(requestBody);
+			const res = await request(app).post(AUTH_REGISTER_URL).send(requestBody);
 
 			// Assert
 			expect(res.status).toBe(message.status);
@@ -214,7 +213,7 @@ describe("POST auth/login", () => {
 
 		const res = await request(app)
 			.post(POST_AUTH_LOGIN)
-			.send({ username: user.username, password: "wrongPassword" });
+			.send({ username: user.username, password: "wrongPassword123.+" });
 
 		const { status, message, title } = MESSAGES.AUTH_CREDENTIALS_INVALID;
 
@@ -230,7 +229,7 @@ describe("POST auth/login", () => {
 	it("should return 401 if username is incorrect", async () => {
 		const res = await request(app)
 			.post(POST_AUTH_LOGIN)
-			.send({ username: "user", password: "wrongPassword" });
+			.send({ username: "username", password: "wrongPassword123.+2" });
 
 		const { status, message, title } = MESSAGES.AUTH_CREDENTIALS_INVALID;
 
@@ -333,7 +332,7 @@ describe("POST /auth/logout", () => {
 		// Act
 		const res = await request(app)
 			.post(POST_AUTH_LOGOUT)
-			.send({ refreshToken: "Invalid refresh token" });
+			.send({ refreshToken: generateMockJWT() });
 		const { message, title, status } = MESSAGES.AUTH_REFRESH_TOKEN_INVALID;
 
 		// Assert

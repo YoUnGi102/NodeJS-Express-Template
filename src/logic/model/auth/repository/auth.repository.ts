@@ -7,8 +7,8 @@ import {
 	IsNull,
 } from "typeorm";
 import { AuthDTO, AuthRegisterRequest } from "../auth.types";
-import { toAuthDTO } from "./auth.mapper";
 import { IAuthRepository } from "./auth.repository.interface";
+import { AuthDTOSchema } from "../auth.schema";
 
 const USER_ACTIVE_CONDITION = {
 	active: true,
@@ -49,7 +49,7 @@ export class TypeormAuthRepository implements IAuthRepository {
 		email: string,
 	): Promise<AuthDTO | null> {
 		const user = await this.findBy([{ username }, { email }]);
-		return user ? toAuthDTO(user) : null;
+		return user ? AuthDTOSchema().parse(user) : null;
 	}
 
 	async findByUsernameWithPassword(username: string): Promise<AuthDTO | null> {
@@ -57,13 +57,12 @@ export class TypeormAuthRepository implements IAuthRepository {
 			{ ...USER_ACTIVE_CONDITION, username },
 			{ password: true },
 		);
-		return user ? toAuthDTO(user) : null;
+		return user ? AuthDTOSchema().parse(user) : null;
 	}
 
 	async findByUUID(uuid: string): Promise<AuthDTO | null> {
 		const user = await this.findBy({ ...USER_ACTIVE_CONDITION, uuid });
-
-		return user ? toAuthDTO(user) : null;
+		return user ? AuthDTOSchema().parse(user) : null;
 	}
 
 	async create(auth: AuthRegisterRequest): Promise<AuthDTO> {
@@ -73,6 +72,6 @@ export class TypeormAuthRepository implements IAuthRepository {
 			password: auth.password,
 		});
 		const userCreated = await this.userRepo.save(user);
-		return toAuthDTO(userCreated);
+		return AuthDTOSchema().parse(userCreated);
 	}
 }

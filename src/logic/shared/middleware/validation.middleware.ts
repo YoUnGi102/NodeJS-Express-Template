@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { RequestPart, SchemaMap } from "../types/validation.types";
 
+// TODO ADD COOKIE VALIDATION
 const validate = (schemas: SchemaMap) => {
 	return (req: Request, res: Response, next: NextFunction): void => {
 		const result: Partial<Record<RequestPart, unknown>> = {};

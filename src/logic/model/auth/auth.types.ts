@@ -1,42 +1,40 @@
 import {
-	postAuthLogin,
-	postAuthRefresh,
-	postAuthRegister,
+	AuthLoginRequestSchema,
+	AuthRefreshRequestSchema,
+	AuthRegisterRequestSchema,
+	AuthUserResponseSchema,
+	AuthResponseSchema,
+	AuthDTOSchema,
 } from "./auth.schema";
 import z from "zod";
 
 // ====================
 // Data Transfer Objects (DTOs)
 // ====================
-export interface AuthDTO {
-	id: number;
-	username: string;
-	email: string;
-	password?: string;
-	uuid: string;
-	createdAt: Date;
-}
+export type AuthDTO = z.infer<ReturnType<typeof AuthDTOSchema>>;
 
 // ====================
 // Response Types
 // ====================
-export type AuthUserResponse = Pick<
-	AuthDTO,
-	"username" | "email" | "createdAt" | "uuid"
+
+export type AuthUserResponse = z.infer<
+	ReturnType<typeof AuthUserResponseSchema>
 >;
-export interface AuthResponse {
-	token: string;
-	refreshToken: string;
-	user: AuthUserResponse;
-}
+export type AuthResponse = z.infer<ReturnType<typeof AuthResponseSchema>>;
 
 // ====================
 // Request Types (from Zod)
 // ====================
 
-export type AuthRegisterRequest = z.infer<ReturnType<typeof postAuthRegister>>;
-export type AuthLoginRequest = z.infer<ReturnType<typeof postAuthLogin>>;
-export type AuthRefreshRequest = z.infer<ReturnType<typeof postAuthRefresh>>;
+export type AuthRegisterRequest = z.infer<
+	ReturnType<typeof AuthRegisterRequestSchema>
+>;
+export type AuthLoginRequest = z.infer<
+	ReturnType<typeof AuthLoginRequestSchema>
+>;
+export type AuthRefreshRequest = z.infer<
+	ReturnType<typeof AuthRefreshRequestSchema>
+>;
 
 // ====================
 // Session Info Type

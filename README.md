@@ -158,7 +158,7 @@ Custom transports, formats, or levels can be configured in `logger.ts`.
 - Swagger UI available at:
 
   ```
-  GET /api/api-docs
+  GET /docs
   ```
 
 Documentation is auto-generated from request validation schemas using `swagger-jsdoc`.
@@ -217,10 +217,10 @@ Test utilities include `global-setup.ts`, `global-teardown.ts`, and custom test 
 ## 📌 Linting & Formatting
 
 ```bash
-# Run ESLint
+# Run Biome Linter
 npm run lint
 
-# Format code with Prettier
+# Format code with Biome
 npm run format
 ```
 
@@ -232,7 +232,7 @@ npm run format
 - **tsyringe** – Dependency injection
 - **Swagger** – API docs
 - **Winston** – Logging
-- **Prettier + ESLint** – Code quality
+- **Biome** – Code quality
 - **Tsup** – TypeScript build tool
 
 ---
@@ -244,8 +244,6 @@ npm run format
 ---
 
 ## 🧩 TODO / Roadmap
-
-- [ ] Add Docker Compose (Postgres + App)
 - [ ] Add rate-limiting & security middleware
 - [ ] Add role-based access control
 - [ ] E2E Tests?

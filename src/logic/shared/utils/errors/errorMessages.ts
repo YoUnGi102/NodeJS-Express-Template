@@ -2,6 +2,7 @@ export const STATUS = {
 	// SUCCESS
 	CREATED: 201,
 	OK: 200,
+	NO_CONTENT: 204,
 
 	// CLIENT ERROR
 	NOT_FOUND: 404,
@@ -14,7 +15,7 @@ export const STATUS = {
 	INTERNAL_SERVER_ERROR: 500,
 };
 
-export interface Message {
+export interface ErrorMessage {
 	title: string;
 	message: string;
 	status: number;

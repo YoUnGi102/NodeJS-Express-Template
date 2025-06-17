@@ -36,7 +36,7 @@ export const createTestUser = async (
 	const users = [];
 	for (let i = 0; i < count; i++) {
 		const user = createTestUserRequest(userOverrides);
-		const res = await request(app).post("/api/auth/register").send(user);
+		const res = await request(app).post("/auth/register").send(user);
 
 		if (res.status !== 201) {
 			throw new Error(
@@ -59,4 +59,19 @@ export const createTestSessionForUser = async (
 		refreshToken: authUtils.signRefreshToken(userUUID),
 	});
 	return session;
+};
+
+export const generateMockUUID = (): string => {
+	return crypto.randomUUID();
+};
+
+export const generateMockJWT = (): string => {
+	const base64url = () =>
+		Buffer.from(Math.random().toString(36).substring(2))
+			.toString("base64")
+			.replace(/=/g, "")
+			.replace(/\+/g, "-")
+			.replace(/\//g, "_");
+
+	return `${base64url()}.${base64url()}.${base64url()}`;
 };

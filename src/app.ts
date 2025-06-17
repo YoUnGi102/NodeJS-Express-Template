@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import { swaggerSpec } from "@src/config/swagger.config";
 import { errorMiddleware } from "@src/logic/shared/middleware/error.middleware";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -7,6 +6,7 @@ import express, { Express, Router } from "express";
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import { DataSource } from "typeorm";
+import { openApiDocument } from "./config/openapi";
 
 dotenv.config();
 
@@ -31,7 +31,7 @@ const corsOptions: cors.CorsOptions = {
 const registerRoutes = async (): Promise<Router> => {
 	const router = Router();
 
-	router.get("/api/health", (_, res): void => {
+	router.get("/health", (_, res): void => {
 		res.send("OK");
 	});
 
@@ -59,18 +59,10 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	app.locals.dataSource = dataSource;
 
 	// Register all routes under the /api base path
-	app.use("/api/", await registerRoutes());
+	app.use("/", await registerRoutes());
 
 	// Serve Swagger UI documentation at /api-docs
-	app.use(
-		"/api-docs",
-		swaggerUi.serve,
-		swaggerUi.setup(swaggerSpec, {
-			swaggerOptions: {
-				withCredentials: true,
-			},
-		}),
-	);
+	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 	// Global error handling middleware
 	app.use(errorMiddleware);
