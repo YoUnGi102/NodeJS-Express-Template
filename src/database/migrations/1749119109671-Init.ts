@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Init1748811130653 implements MigrationInterface {
-	name = "Init1748811130653";
+export class Init1749119109671 implements MigrationInterface {
+	name = "Init1749119109671";
 
 	public async up(queryRunner: QueryRunner): Promise<void> {
 		await queryRunner.query(
@@ -33,33 +33,6 @@ export class Init1748811130653 implements MigrationInterface {
 		);
 	}
 
-<<<<<<< HEAD
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `ALTER TABLE "user" DROP CONSTRAINT "FK_c3062c4102a912dfe7195a72bfb"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user" DROP CONSTRAINT "FK_db5173f7d27aa8a98a9fe6113df"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user" DROP CONSTRAINT "FK_45c0d39d1f9ceeb56942db93cc5"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_session" DROP CONSTRAINT "FK_b5eb7aa08382591e7c2d1244fe5"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_session" DROP CONSTRAINT "FK_e1d103cab937be665f3a268f211"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_session" DROP CONSTRAINT "FK_229b263934222f802af79c6663a"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "user_session" DROP CONSTRAINT "FK_ac1fd0a456bc3a867aa3b469b5b"`,
-    );
-    await queryRunner.query(`DROP TABLE "user"`);
-    await queryRunner.query(`DROP TABLE "user_session"`);
-  }
-=======
 	public async down(queryRunner: QueryRunner): Promise<void> {
 		await queryRunner.query(
 			`ALTER TABLE "user" DROP CONSTRAINT "FK_c3062c4102a912dfe7195a72bfb"`,
@@ -85,5 +58,4 @@ export class Init1748811130653 implements MigrationInterface {
 		await queryRunner.query(`DROP TABLE "user"`);
 		await queryRunner.query(`DROP TABLE "user_session"`);
 	}
->>>>>>> origin/main
 }

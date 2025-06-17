@@ -1,30 +1,26 @@
-import '@goodrequest/joi-type-extract/index.d.ts';
-import Joi from 'joi';
 import {
-  postAuthLogin,
-  postAuthRefresh,
-  postAuthRegister,
-} from './auth.schema';
+	AuthLoginRequestSchema,
+	AuthRefreshRequestSchema,
+	AuthRegisterRequestSchema,
+	AuthUserResponseSchema,
+	AuthResponseSchema,
+	AuthDTOSchema,
+} from "./auth.schema";
+import z from "zod";
 
 // ====================
 // Data Transfer Objects (DTOs)
 // ====================
-export interface AuthDTO {
-  id: number;
-  username: string;
-  email: string;
-  password?: string;
-  uuid: string;
-  createdAt: Date;
-}
+export type AuthDTO = z.infer<ReturnType<typeof AuthDTOSchema>>;
 
 // ====================
 // Response Types
 // ====================
-export type AuthUserResponse = Pick<
-  AuthDTO,
-  'username' | 'email' | 'createdAt' | 'uuid'
+
+export type AuthUserResponse = z.infer<
+	ReturnType<typeof AuthUserResponseSchema>
 >;
+<<<<<<< HEAD
 export interface InternalAuthResponse extends AuthResponse {
   refreshToken: string;
 }
@@ -33,24 +29,28 @@ export interface AuthResponse {
   token: string;
   user: AuthUserResponse;
 }
+=======
+export type AuthResponse = z.infer<ReturnType<typeof AuthResponseSchema>>;
+>>>>>>> origin/main
 
 // ====================
-// Request Types (from Joi)
+// Request Types (from Zod)
 // ====================
-export type AuthLoginRequest = Joi.extractType<
-  ReturnType<typeof postAuthLogin>
+
+export type AuthRegisterRequest = z.infer<
+	ReturnType<typeof AuthRegisterRequestSchema>
 >;
-export type AuthRegisterRequest = Joi.extractType<
-  ReturnType<typeof postAuthRegister>
+export type AuthLoginRequest = z.infer<
+	ReturnType<typeof AuthLoginRequestSchema>
 >;
-export type AuthRefreshRequest = Joi.extractType<
-  ReturnType<typeof postAuthRefresh>
+export type AuthRefreshRequest = z.infer<
+	ReturnType<typeof AuthRefreshRequestSchema>
 >;
 
 // ====================
 // Session Info Type
 // ====================
 export interface AuthSessionInfo {
-  ipAddress?: string;
-  userAgent?: string;
+	ipAddress?: string;
+	userAgent?: string;
 }

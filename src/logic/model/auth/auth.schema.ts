@@ -1,47 +1,111 @@
-import Joi from 'joi';
-import { JOI_CONFIG } from '@src/config';
-import { SchemaMap } from '@shared/types/validation.types';
+import { SchemaMap } from "@shared/types/validation.types";
+import ZOD_CONFIG, { z } from "@src/config/zod.config";
 
-export const postAuthRegister = () =>
-  Joi.object({
-    username: Joi.string()
-      .min(JOI_CONFIG.USER.MIN_USERNAME_LENGTH)
-      .max(50)
-      .required(),
-    password: Joi.string()
-      .min(JOI_CONFIG.USER.MIN_PASSWORD_LENGTH)
-      .max(50)
-      .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).{8,}$'))
-      .required()
-      .messages({
-        'string.pattern.base':
-          'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-      }),
-    email: Joi.string().email().required(),
-  }).options(JOI_CONFIG.DEFAULT_OPTIONS);
+const AUTH_SCHEMA_FIELDS = {
+	ID: z.number().openapi({ example: 1 }),
+	USERNAME: z
+		.string()
+		.min(ZOD_CONFIG.USER.MIN_USERNAME_LENGTH)
+		.max(ZOD_CONFIG.USER.MAX_PASSWORD_LENGTH)
+		.openapi({ example: "Example123" }),
+	PASSWORD: z
+		.string()
+		.min(ZOD_CONFIG.USER.MIN_PASSWORD_LENGTH)
+		.max(ZOD_CONFIG.USER.MAX_PASSWORD_LENGTH)
+		.regex(ZOD_CONFIG.REGEX.PASSWORD, {
+			message:
+				"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+		})
+		.openapi({ example: "Passw0rd.+" }),
+	EMAIL: z.string().email().openapi({ example: "exmpl123@example.com" }),
+	UUID: z
+		.string()
+		.uuid()
+		.openapi({ example: "2e696b5f-63f7-4ac6-b815-7f7c9888aa56" }),
+	CREATED_AT: z.date().openapi({ example: "2025-03-19T08:47:58.398Z" }),
+	REFRESH_TOKEN: z.string().regex(ZOD_CONFIG.REGEX.JWT).openapi({
+		example:
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
+	}),
+	ACCESS_TOKEN: z.string().regex(ZOD_CONFIG.REGEX.JWT).openapi({
+		example:
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNzUwMDkzNjcyfQ==.1234567890",
+	}),
+};
 
-export const postAuthLogin = () =>
-  Joi.object({
-    username: Joi.string().max(50).required(),
-    password: Joi.string().max(50).required(),
-  }).options(JOI_CONFIG.DEFAULT_OPTIONS);
+// ===============
+// Request Schemas
+// ===============
 
-export const postAuthRefresh = () =>
-  Joi.object({
-    refreshToken: Joi.string().required(),
-  }).options(JOI_CONFIG.DEFAULT_OPTIONS);
+export const AuthRegisterRequestSchema = () =>
+	z.object({
+		username: AUTH_SCHEMA_FIELDS.USERNAME,
+		password: AUTH_SCHEMA_FIELDS.PASSWORD,
+		email: AUTH_SCHEMA_FIELDS.EMAIL,
+	});
 
-// VALIDATORS
+export const AuthLoginRequestSchema = () =>
+	z.object({
+		username: AUTH_SCHEMA_FIELDS.USERNAME,
+		password: AUTH_SCHEMA_FIELDS.PASSWORD,
+	});
+
+export const AuthRefreshRequestSchema = () =>
+	z.object({
+		refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
+	});
+
+// ==========
+// DTO Schema
+// ==========
+
+export const AuthDTOSchema = () =>
+	z.object({
+		id: AUTH_SCHEMA_FIELDS.ID,
+		username: AUTH_SCHEMA_FIELDS.USERNAME,
+		email: AUTH_SCHEMA_FIELDS.EMAIL,
+		password: AUTH_SCHEMA_FIELDS.PASSWORD.optional(),
+		uuid: AUTH_SCHEMA_FIELDS.UUID,
+		createdAt: AUTH_SCHEMA_FIELDS.CREATED_AT,
+	});
+
+// ================
+// Response Schemas
+// ================
+
+export const AuthUserResponseSchema = () =>
+	AuthDTOSchema().pick({
+		username: true,
+		email: true,
+		uuid: true,
+		createdAt: true,
+	});
+
+export const AuthResponseSchema = () =>
+	z.object({
+		refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
+		token: AUTH_SCHEMA_FIELDS.ACCESS_TOKEN,
+		user: AuthUserResponseSchema(),
+	});
+
+// ==========
+// Validators
+// ==========
+
 const POST_AUTH_REGISTER: SchemaMap = {
-  body: postAuthRegister(),
+	body: AuthRegisterRequestSchema(),
 };
 
 const POST_AUTH_LOGIN: SchemaMap = {
-  body: postAuthLogin(),
+	body: AuthLoginRequestSchema(),
 };
 
 const POST_AUTH_REFRESH: SchemaMap = {
-  body: postAuthRefresh(),
+	body: AuthRefreshRequestSchema(),
 };
 
-export default { POST_AUTH_LOGIN, POST_AUTH_REGISTER, POST_AUTH_REFRESH };
+export default {
+	POST_AUTH_LOGIN,
+	POST_AUTH_REGISTER,
+	POST_AUTH_REFRESH,
+};

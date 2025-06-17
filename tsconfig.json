@@ -1,38 +1,38 @@
 {
-  "compilerOptions": {
-    "module": "ESNext",
-    "target": "ES2020",
-    "moduleResolution": "Node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "dist",
-    "rootDir": "src",
-    "baseUrl": ".",
-    "resolveJsonModule": true,
-    "types": ["node", "express"],
-    "strictNullChecks": true,
-    "plugins": [
-      {
-        "transform": "typescript-transform-paths",
-        "afterDeclarations": true
-      }
-    ],
-    "paths": {
-      "@src/*": ["src/*"],
-      "@config/*": ["src/config/*"],
-      "@logic/*": ["src/logic/*"],
-      "@model/*": ["src/logic/model/*"],
-      "@utils/*": ["src/logic/shared/utils/*"],
-      "@database/*": ["src/database/*"],
-      "@shared/*": ["src/logic/shared/*"],
-      "@test/*": ["test/*"]
-    }
-  },
-  "include": ["src/**/*", "src/database/migrations/**/*"],
-  "exclude": ["node_modules", "dist"]
+	"compilerOptions": {
+		"module": "ESNext",
+		"target": "ES2020",
+		"moduleResolution": "Node",
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"outDir": "dist",
+		"rootDir": "src",
+		"baseUrl": ".",
+		"resolveJsonModule": true,
+		"types": ["node", "express", "vitest/globals"],
+		"strictNullChecks": true,
+		"plugins": [
+			{
+				"transform": "typescript-transform-paths",
+				"afterDeclarations": true
+			}
+		],
+		"paths": {
+			"@src/*": ["src/*"],
+			"@config/*": ["src/config/*"],
+			"@logic/*": ["src/logic/*"],
+			"@model/*": ["src/logic/model/*"],
+			"@utils/*": ["src/logic/shared/utils/*"],
+			"@database/*": ["src/database/*"],
+			"@shared/*": ["src/logic/shared/*"],
+			"@test/*": ["test/*"]
+		}
+	},
+	"include": ["src/**/*", "src/database/migrations/**/*"],
+	"exclude": ["node_modules", "dist"]
 }
