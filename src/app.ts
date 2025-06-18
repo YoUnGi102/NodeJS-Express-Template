@@ -10,7 +10,7 @@ import { openApiDocument } from "./config/openapi";
 import cookieParser from "cookie-parser";
 import { authMiddleware } from "./logic/shared/middleware/auth.middleware";
 import { loggingMiddleware } from "./logic/shared/middleware/logging.middleware";
-import rateLimit from 'express-rate-limit';
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -32,10 +32,10 @@ const corsOptions: cors.CorsOptions = {
 };
 
 const rateLimiter = rateLimit({
-	windowMs: 5*60*1000,
+	windowMs: 5 * 60 * 1000,
 	max: 10,
-	message: 'Too many attempts, please try again later'
-})
+	message: "Too many attempts, please try again later",
+});
 
 // Registers all application routes and submodules
 const registerRoutes = async (): Promise<Router> => {
@@ -82,7 +82,9 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 	app.use(express.json());
 
 	// rateLimiter
-	app.use(rateLimiter);
+	if (process.env.NODE_ENV !== "test") {
+		app.use(rateLimiter);
+	}
 
 	// Makes TypeORM DataSource available globally via app.locals
 	app.locals.dataSource = dataSource;
