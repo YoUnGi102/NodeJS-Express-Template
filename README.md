@@ -80,6 +80,15 @@ npm install
 
 # Copy environment variables
 cp .env.example .env
+
+# Create SSL certificate folder
+mkdir ssl
+
+# Generate a self-signed certificate (valid for 365 days)
+openssl req -x509 -newkey rsa:2048 -nodes -keyout ssl/key.pem -out ssl/cert.pem -days 365 \
+  -subj "/C=US/ST=Local/L=Localhost/O=Dev/OU=Dev/CN=localhost"
+
+# store the key.pem and cert.pem in ./ssl under project folder
 ```
 
 Update `.env` with your database credentials and secrets.

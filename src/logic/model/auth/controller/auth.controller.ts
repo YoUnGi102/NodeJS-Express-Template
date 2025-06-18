@@ -52,17 +52,19 @@ export class AuthController implements IAuthController {
 	private addCookie(res: Response, refreshToken: string): void {
 		res.cookie("jid", refreshToken, {
 			httpOnly: true,
-			sameSite: "lax",
-			secure: process.env.NODE_ENV === "production",
+			sameSite: "none",
+			secure: true,
 			maxAge: ms("28d"),
+			path: "/",
 		});
 	}
 
 	private clearCookie(res: Response): void {
 		res.clearCookie("jid", {
 			httpOnly: true,
-			sameSite: "lax",
-			secure: process.env.NODE_ENV === "production",
+			sameSite: "none",
+			secure: true,
+			path: "/",
 		});
 	}
 }

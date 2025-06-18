@@ -49,8 +49,7 @@ export class SessionService implements ISessionService {
 	}
 
 	async revokeSession(refreshToken: string): Promise<void> {
-		verifyRefreshToken(refreshToken);
-
+		verifyRefreshToken(refreshToken, true);
 		const hash = hashUtils.sha256(refreshToken);
 		await this.sessionRepo.delete(hash);
 	}

@@ -8,3 +8,5 @@ coverage/
 dist/
 logs/
 .vscode/
+/ssl
+*.pem
