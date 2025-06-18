@@ -6,8 +6,8 @@ import { container } from "tsyringe";
 import { DataSource } from "typeorm";
 import { createApp } from "./app";
 import AppDataSource from "./database/data-source";
-import fs from 'fs';
-import https from 'https'
+import fs from "fs";
+import https from "node:https";
 
 dotenv.config();
 
@@ -24,17 +24,15 @@ AppDataSource.initialize()
 		const app = await createApp(AppDataSource);
 
 		const sslOptions = {
-			key: fs.readFileSync('./ssl/key.pem'),
-			cert: fs.readFileSync('./ssl/cert.pem')
+			key: fs.readFileSync("./ssl/key.pem"),
+			cert: fs.readFileSync("./ssl/cert.pem"),
 		};
 
-		https.createServer(sslOptions, app)
-			.listen(PORT, "0.0.0.0", () => {
-				if (NODE_ENV !== "production") {
-					logger.info(`Listening on https://localhost:${PORT}`);
-				}
+		https.createServer(sslOptions, app).listen(PORT, "0.0.0.0", () => {
+			if (NODE_ENV !== "production") {
+				logger.info(`Listening on https://localhost:${PORT}`);
 			}
-			);
+		});
 	})
 	.catch((error: Error) => {
 		logger.error("Database connection failed:", error);

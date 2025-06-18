@@ -10,6 +10,7 @@ import { openApiDocument } from "./config/openapi";
 import cookieParser from "cookie-parser";
 import { authMiddleware } from "./logic/shared/middleware/auth.middleware";
 import { loggingMiddleware } from "./logic/shared/middleware/logging.middleware";
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -30,6 +31,12 @@ const corsOptions: cors.CorsOptions = {
 	credentials: true,
 };
 
+const rateLimiter = rateLimit({
+	windowMs: 5*60*1000,
+	max: 10,
+	message: 'Too many attempts, please try again later'
+})
+
 // Registers all application routes and submodules
 const registerRoutes = async (): Promise<Router> => {
 	const router = Router();
@@ -42,14 +49,19 @@ const registerRoutes = async (): Promise<Router> => {
 	const auth = (await import("@model/auth/auth.routes")).default;
 	router.use("/auth", auth);
 
-	router.get('/test', authMiddleware, loggingMiddleware, (req: Request, res: Response) => {
-		res.status(200).json({
-			authenticated: true,
-			uuid: req.auth?.uuid,
-			username: req.auth?.username,
-			email: req.auth?.email
-		})
-	})
+	router.get(
+		"/test",
+		authMiddleware,
+		loggingMiddleware,
+		(req: Request, res: Response) => {
+			res.status(200).json({
+				authenticated: true,
+				uuid: req.auth?.uuid,
+				username: req.auth?.username,
+				email: req.auth?.email,
+			});
+		},
+	);
 
 	return router;
 };
@@ -68,6 +80,9 @@ export const createApp = async (dataSource: DataSource): Promise<Express> => {
 
 	// Parses incoming JSON requests
 	app.use(express.json());
+
+	// rateLimiter
+	app.use(rateLimiter);
 
 	// Makes TypeORM DataSource available globally via app.locals
 	app.locals.dataSource = dataSource;

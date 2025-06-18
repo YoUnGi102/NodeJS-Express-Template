@@ -6,8 +6,6 @@ import { ISessionRepository } from "../repository/session.repository.interface";
 import { UserSessionDTO } from "../session.types";
 import { signRefreshToken, verifyRefreshToken } from "../utils/helper";
 import { ISessionService } from "./session.service.interface";
-import { APIError } from "@src/logic/shared/utils/errors/APIError";
-import { MESSAGES } from "@src/logic/shared/utils/errors/errorMessages";
 
 @injectable()
 export class SessionService implements ISessionService {
