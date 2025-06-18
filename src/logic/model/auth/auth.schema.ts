@@ -83,9 +83,13 @@ export const AuthUserResponseSchema = () =>
 
 export const AuthResponseSchema = () =>
 	z.object({
-		refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
 		token: AUTH_SCHEMA_FIELDS.ACCESS_TOKEN,
 		user: AuthUserResponseSchema(),
+	});
+
+export const InternalAuthResponseSchema = () =>
+	AuthResponseSchema().extend({
+		refreshToken: AUTH_SCHEMA_FIELDS.REFRESH_TOKEN,
 	});
 
 // ==========

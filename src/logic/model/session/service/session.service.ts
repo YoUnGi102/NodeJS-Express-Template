@@ -6,6 +6,8 @@ import { ISessionRepository } from "../repository/session.repository.interface";
 import { UserSessionDTO } from "../session.types";
 import { signRefreshToken, verifyRefreshToken } from "../utils/helper";
 import { ISessionService } from "./session.service.interface";
+import { APIError } from "@src/logic/shared/utils/errors/APIError";
+import { MESSAGES } from "@src/logic/shared/utils/errors/errorMessages";
 
 @injectable()
 export class SessionService implements ISessionService {
@@ -49,8 +51,7 @@ export class SessionService implements ISessionService {
 	}
 
 	async revokeSession(refreshToken: string): Promise<void> {
-		verifyRefreshToken(refreshToken);
-
+		verifyRefreshToken(refreshToken, true);
 		const hash = hashUtils.sha256(refreshToken);
 		await this.sessionRepo.delete(hash);
 	}

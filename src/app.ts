@@ -2,12 +2,14 @@ import "reflect-metadata";
 import { errorMiddleware } from "@src/logic/shared/middleware/error.middleware";
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Express, Router } from "express";
+import express, { Express, Router, Response, Request } from "express";
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import { DataSource } from "typeorm";
 import { openApiDocument } from "./config/openapi";
 import cookieParser from "cookie-parser";
+import { authMiddleware } from "./logic/shared/middleware/auth.middleware";
+import { loggingMiddleware } from "./logic/shared/middleware/logging.middleware";
 
 dotenv.config();
 
@@ -39,6 +41,15 @@ const registerRoutes = async (): Promise<Router> => {
 	// Lazy-load routes
 	const auth = (await import("@model/auth/auth.routes")).default;
 	router.use("/auth", auth);
+
+	router.get('/test', authMiddleware, loggingMiddleware, (req: Request, res: Response) => {
+		res.status(200).json({
+			authenticated: true,
+			uuid: req.auth?.uuid,
+			username: req.auth?.username,
+			email: req.auth?.email
+		})
+	})
 
 	return router;
 };
