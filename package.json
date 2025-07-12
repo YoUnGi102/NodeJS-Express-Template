@@ -39,7 +39,7 @@
 		"fs": "^0.0.1-security",
 		"helmet": "^8.1.0",
 		"jsonwebtoken": "^9.0.2",
-		"pg": "^8.16.0",
+		"pg": "^8.16.2",
 		"reflect-metadata": "^0.2.2",
 		"swagger-ui-express": "^5.0.1",
 		"tsyringe": "^4.10.0",
